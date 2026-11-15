@@ -1,8 +1,8 @@
 {
   "id": "/",
-  "name": "Ruang — Catatan Pengetahuan",
+  "name": "Ruang — Catatan dan Gagasan",
   "short_name": "Ruang",
-  "description": "Ruang untuk menyimpan ide, pengetahuan, dan hal-hal yang ingin kamu ingat.",
+  "description": "Tulisan tentang filsafat, bahasa, teknologi, dan cara belajar.",
   "lang": "id",
   "start_url": "/",
   "scope": "/",

@@ -1,0 +1,60 @@
+import json
+import sys
+import tempfile
+import unittest
+import xml.etree.ElementTree as ET
+from pathlib import Path
+from unittest.mock import patch
+
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+import build
+
+
+class BlogBuildTests(unittest.TestCase):
+    def test_build_publishes_article_pages_and_excludes_drafts(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            temporary_path = Path(temporary_directory)
+            posts_directory = temporary_path / "posts"
+            output_directory = temporary_path / "site"
+            posts_directory.mkdir()
+            (posts_directory / "public-post.md").write_text(
+                '---\ntitle: "Tulisan publik"\ndate: 2026-01-02\n'
+                'category: "Filsafat"\nexcerpt: "Ringkasan publik."\npublished: true\n'
+                '---\n\nIsi tulisan publik.',
+                encoding="utf-8",
+            )
+            (posts_directory / "draft-post.md").write_text(
+                '---\ntitle: "Tulisan draf"\ndate: 2026-01-03\n'
+                'category: "Filsafat"\nexcerpt: "Ringkasan draf."\npublished: false\n'
+                '---\n\nIsi tulisan draf.',
+                encoding="utf-8",
+            )
+
+            with patch.object(build, "POSTS_DIR", posts_directory), patch.object(
+                build, "OUTPUT", output_directory
+            ):
+                build.build()
+
+            home = (output_directory / "index.html").read_text(encoding="utf-8")
+            self.assertIn("Tulisan publik", home)
+            self.assertNotIn("Tulisan draf", home)
+            self.assertTrue((output_directory / "posts/public-post/index.html").is_file())
+            self.assertFalse((output_directory / "posts/draft-post/index.html").exists())
+            posts = json.loads((output_directory / "posts.json").read_text(encoding="utf-8"))
+            self.assertEqual([post["slug"] for post in posts], ["public-post"])
+            self.assertTrue((output_directory / "admin/index.html").is_file())
+            sitemap = ET.parse(output_directory / "sitemap.xml")
+            self.assertEqual(len(sitemap.findall(".//{*}loc")), 1)
+
+    def test_markdown_content_is_sanitized(self):
+        result = build.render_markdown(
+            '<script>alert(1)</script>\n\n<a href="javascript:alert(1)">tautan</a>'
+        )
+        self.assertNotIn("<script", result)
+        self.assertNotIn("javascript:", result)
+        self.assertIn("tautan", result)
+
+
+if __name__ == "__main__":
+    unittest.main()

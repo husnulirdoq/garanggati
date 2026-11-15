@@ -1,5 +1,6 @@
-const CACHE_NAME = "ruang-shell-v1";
-const APP_SHELL = ["/", "/index.html", "/styles.css", "/app.js", "/manifest.json", "/icon.svg", "/icon-192.png", "/icon-512.png"];
+const CACHE_NAME = "ruang-blog-v3";
+const BUILD_CHUNKS = [];
+const APP_SHELL = ["/index.html", "/admin/index.html", "/styles.css", "/blog.js", "/admin.js", "/posts.json", "/manifest.json", "/icon.svg", "/icon-192.png", "/icon-512.png", ...BUILD_CHUNKS];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -28,11 +29,11 @@ self.addEventListener("fetch", (event) => {
         .then((response) => {
           if (response.ok) {
             const copy = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put("/index.html", copy));
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
           }
           return response;
         })
-        .catch(async () => (await caches.match(event.request)) || (await caches.match("/index.html"))),
+        .catch(async () => (await caches.match(event.request)) || (await caches.match(url.pathname.startsWith("/admin") ? "/admin/index.html" : "/index.html"))),
     );
     return;
   }

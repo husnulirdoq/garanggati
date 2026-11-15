@@ -1,0 +1,19 @@
+{
+  "name": "ruang-blog",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:js": "node scripts/clean-dist.mjs && esbuild blog.js admin.js --bundle --minify --format=esm --splitting --chunk-names=chunks/[name]-[hash] --outdir=dist"
+  },
+  "dependencies": {
+    "dompurify": "3.4.18",
+    "firebase": "13.3.0",
+    "marked": "18.2.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  },
+  "overrides": {
+    "@grpc/grpc-js": "1.14.7"
+  }
+}

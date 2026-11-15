@@ -1,0 +1,6 @@
+_site/
+dist/
+node_modules/
+__pycache__/
+.venv/
+node_modules

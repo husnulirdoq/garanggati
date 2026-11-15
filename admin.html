@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#f7f6f2">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/styles.css">
+    <title>Admin — Ruang</title>
+  </head>
+  <body class="admin-page">
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Ruang, halaman utama">
+        <span class="brand-mark" aria-hidden="true">r.</span>
+        <span>ruang<span class="brand-period">.</span></span>
+      </a>
+      <a class="admin-back-link" href="/">← Lihat blog</a>
+    </header>
+    <main class="admin-main">
+      <section class="admin-intro">
+        <p class="eyebrow">RUANG EDITORIAL</p>
+        <h1>Kelola tulisan<span class="brand-period">.</span></h1>
+        <p>Masuk untuk membuat, memperbarui, dan menerbitkan artikel.</p>
+      </section>
+
+      <div class="admin-notice" id="admin-notice" role="status" aria-live="polite" hidden></div>
+
+      <section class="admin-panel login-panel" id="login-panel">
+        <h2>Masuk admin</h2>
+        <p class="panel-description">Akun admin dibuat dari Firebase Console. Pendaftaran publik tidak tersedia.</p>
+        <form id="login-form">
+          <label for="login-email">Email</label>
+          <input id="login-email" type="email" autocomplete="username" required>
+          <label for="login-password">Kata sandi</label>
+          <input id="login-password" type="password" autocomplete="current-password" required>
+          <div class="login-actions">
+            <button class="primary-button" type="submit">Masuk <span aria-hidden="true">→</span></button>
+            <button class="text-button" id="reset-password-button" type="button">Lupa kata sandi?</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="admin-workspace" id="admin-workspace" hidden>
+        <div class="admin-toolbar">
+          <p id="signed-in-email"></p>
+          <button class="secondary-button" id="sign-out-button" type="button">Keluar</button>
+        </div>
+        <section class="admin-panel">
+          <div class="editor-heading">
+            <div>
+              <p class="eyebrow">EDITOR</p>
+              <h2 id="editor-title">Tulisan baru</h2>
+            </div>
+            <button class="secondary-button" id="new-post-button" type="button">+ Tulisan baru</button>
+          </div>
+          <form id="post-form">
+            <input id="post-id" type="hidden">
+            <label for="post-title">Judul</label>
+            <input id="post-title" maxlength="120" required>
+            <label for="post-slug">Slug URL</label>
+            <input id="post-slug" pattern="[a-z0-9]+(-[a-z0-9]+)*" required>
+            <p class="field-help">Huruf kecil, angka, dan tanda hubung. Slug tidak dapat diubah setelah tulisan dibuat.</p>
+            <div class="form-row">
+              <div>
+                <label for="post-date">Tanggal</label>
+                <input id="post-date" type="date" required>
+              </div>
+              <div>
+                <label for="post-category">Topik</label>
+                <input id="post-category" maxlength="40" list="category-options" required>
+                <datalist id="category-options">
+                  <option value="Filsafat"></option>
+                  <option value="Bahasa"></option>
+                  <option value="Teknologi"></option>
+                  <option value="Belajar"></option>
+                </datalist>
+              </div>
+            </div>
+            <label for="post-excerpt">Ringkasan</label>
+            <textarea id="post-excerpt" rows="2" maxlength="300" required></textarea>
+            <label for="post-body">Isi artikel (Markdown)</label>
+            <textarea id="post-body" rows="12" maxlength="50000" required></textarea>
+            <label class="publish-toggle"><input id="post-published" type="checkbox" checked> Terbitkan tulisan</label>
+            <div class="editor-actions">
+              <button class="delete-button" id="delete-post-button" type="button" hidden>Hapus tulisan</button>
+              <div class="editor-action-right">
+                <button class="secondary-button" id="cancel-edit-button" type="button">Batal</button>
+                <button class="primary-button" type="submit">Simpan tulisan <span aria-hidden="true">→</span></button>
+              </div>
+            </div>
+          </form>
+        </section>
+
+        <section class="admin-panel post-list-panel">
+          <div class="editor-heading">
+            <div>
+              <p class="eyebrow">PERPUSTAKAAN</p>
+              <h2>Tulisan tersimpan</h2>
+            </div>
+            <button class="secondary-button" id="import-posts-button" type="button" hidden>Impor 5 tulisan awal</button>
+          </div>
+          <p class="panel-description" id="post-list-status" aria-live="polite"></p>
+          <ul class="admin-post-list" id="admin-post-list"></ul>
+        </section>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <a class="footer-brand" href="/">ruang<span class="brand-period">.</span></a>
+      <span>Panel admin hanya untuk pengelola.</span>
+      <a href="/">Kembali ke blog →</a>
+    </footer>
+    <script type="module" src="/admin.js"></script>
+  </body>
+</html>

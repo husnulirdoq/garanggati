@@ -1,0 +1,33 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null &&
+        request.auth.uid == "mB66CRd6bCRNyORtKlxklGLS6Zh2D";
+    }
+
+    function validPost(postId) {
+      let data = request.resource.data;
+      return data.keys().hasAll([
+          "title", "slug", "date", "category", "excerpt", "body", "published", "updatedAt"
+        ]) &&
+        data.keys().hasOnly([
+          "title", "slug", "date", "category", "excerpt", "body", "published", "updatedAt"
+        ]) &&
+        data.slug == postId &&
+        data.title is string && data.title.size() > 0 && data.title.size() <= 120 &&
+        data.date is string && data.date.matches("^[0-9]{4}-[0-9]{2}-[0-9]{2}$") &&
+        data.category is string && data.category.size() > 0 && data.category.size() <= 40 &&
+        data.excerpt is string && data.excerpt.size() > 0 && data.excerpt.size() <= 300 &&
+        data.body is string && data.body.size() > 0 && data.body.size() <= 50000 &&
+        data.published is bool &&
+        data.updatedAt is timestamp;
+    }
+
+    match /posts/{postId} {
+      allow read: if isAdmin() || resource.data.published == true;
+      allow create, update: if isAdmin() && validPost(postId);
+      allow delete: if isAdmin();
+    }
+  }
+}
