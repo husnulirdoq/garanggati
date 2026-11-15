@@ -168,6 +168,7 @@ def shell(title, description, body, canonical, extra_head="", og_type="website")
       </a>
       <nav class="site-nav" aria-label="Navigasi utama">
         <a href="/#tulisan">Tulisan</a>
+        <a href="/shop/">Shop</a>
         <a href="/#topik">Topik</a>
         <a class="admin-login-link" href="/admin/">Login admin</a>
       </nav>
@@ -275,6 +276,56 @@ def build_post(post, recent_posts):
     )
 
 
+def build_shop():
+    body = """
+    <main class="shop-main">
+      <section class="shop-hero">
+        <p class="eyebrow">GARANGGATI SHOP</p>
+        <h1>Belanja pilihan<br><span>kami.</span></h1>
+        <p class="shop-copy">Temukan produk Garanggati melalui marketplace pilihanmu.</p>
+      </section>
+      <section class="shop-section" aria-labelledby="shop-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">PILIH MARKETPLACE</p>
+            <h2 id="shop-heading">Jelajahi toko kami<span class="brand-period">.</span></h2>
+          </div>
+        </div>
+        <div class="shop-grid">
+          <article class="post-card shop-card">
+            <div class="post-meta">
+              <span class="category-pill">Marketplace</span>
+              <span class="shop-platform">Shopee</span>
+            </div>
+            <h2>Shopee</h2>
+            <p>Lihat katalog produk Garanggati dan belanja langsung di toko Shopee kami.</p>
+            <a class="read-link" href="https://shopee.co.id/garanggatishop#product_list" target="_blank" rel="noopener noreferrer">
+              Lihat toko di Shopee <span aria-hidden="true">↗</span>
+            </a>
+          </article>
+          <article class="post-card shop-card">
+            <div class="post-meta">
+              <span class="category-pill">Marketplace</span>
+              <span class="shop-platform">TikTok Shop</span>
+            </div>
+            <h2>TikTok Shop</h2>
+            <p>Kunjungi toko Garanggati di TikTok Shop untuk melihat produk yang tersedia.</p>
+            <a class="read-link" href="https://vt.tiktok.com/ZSpbfegqy/" target="_blank" rel="noopener noreferrer">
+              Lihat toko di TikTok <span aria-hidden="true">↗</span>
+            </a>
+          </article>
+        </div>
+      </section>
+    </main>
+    """
+    return shell(
+        "Shop Garanggati — " + SITE_NAME,
+        "Jelajahi toko Garanggati di Shopee dan TikTok Shop.",
+        body,
+        BASE_URL + "/shop/",
+    )
+
+
 def build_not_found():
     body = """
     <main class="not-found">
@@ -298,8 +349,10 @@ def build():
     OUTPUT.mkdir()
     (OUTPUT / "posts").mkdir()
     (OUTPUT / "admin").mkdir()
+    (OUTPUT / "shop").mkdir()
     (OUTPUT / "index.html").write_text(build_home(posts), encoding="utf-8")
     (OUTPUT / "404.html").write_text(build_not_found(), encoding="utf-8")
+    (OUTPUT / "shop" / "index.html").write_text(build_shop(), encoding="utf-8")
 
     for post in posts:
         post_dir = OUTPUT / "posts" / post["slug"]
@@ -345,8 +398,9 @@ def build():
     shutil.copy2(ROOT / "CNAME", OUTPUT / "CNAME")
 
     sitemap = ET.Element("urlset", {"xmlns": "http://www.sitemaps.org/schemas/sitemap/0.9"})
-    url_element = ET.SubElement(sitemap, "{http://www.sitemaps.org/schemas/sitemap/0.9}url")
-    ET.SubElement(url_element, "{http://www.sitemaps.org/schemas/sitemap/0.9}loc").text = BASE_URL + "/"
+    for path in ("/", "/shop/"):
+        url_element = ET.SubElement(sitemap, "{http://www.sitemaps.org/schemas/sitemap/0.9}url")
+        ET.SubElement(url_element, "{http://www.sitemaps.org/schemas/sitemap/0.9}loc").text = BASE_URL + path
     ET.indent(sitemap, space="  ")
     (OUTPUT / "sitemap.xml").write_bytes(
         ET.tostring(sitemap, encoding="utf-8", xml_declaration=True)

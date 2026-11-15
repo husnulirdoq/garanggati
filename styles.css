@@ -117,6 +117,20 @@ kbd { padding: 2px 5px; border: 1px solid #e6e4dc; border-radius: 3px; color: #9
 .not-found a { color: var(--green-dark); text-decoration: none; font-size: 11px; }
 .site-status { margin: 15px 0 0; padding: 11px 13px; border: 1px solid #ead9c5; border-radius: 6px; background: #fbf4e9; color: #806541; font-size: 10px; }
 
+.shop-hero { padding: 66px max(11vw, calc((100vw - 1080px) / 2)) 55px; border-bottom: 1px solid var(--line); background: linear-gradient(110deg, #f3f2ec 0%, #f7f6f2 63%, #eeefe7 100%); }
+.shop-hero .eyebrow { margin-bottom: 12px; }
+.shop-hero h1 { margin: 0; font: 600 clamp(39px, 5vw, 58px)/1.12 "Segoe UI", sans-serif; letter-spacing: -2.7px; }
+.shop-hero h1 span { color: var(--green); }
+.shop-copy { margin: 14px 0 0; color: #777970; font-size: 12px; line-height: 1.8; }
+.shop-section { max-width: 1080px; min-height: 390px; margin: 0 auto; padding: 56px 20px 76px; }
+.shop-section .section-heading { margin-bottom: 20px; }
+.shop-section .section-heading h2 { font-size: 27px; }
+.shop-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 15px; }
+.shop-card { min-height: 205px; }
+.shop-platform { color: #777970; font-size: 10px; font-weight: 600; }
+.shop-card h2 { margin-top: 20px; }
+.shop-card .read-link { padding-top: 20px; }
+
 .admin-page { min-height: 100vh; display: flex; flex-direction: column; }
 .admin-page .site-header { width: 100%; }
 .admin-back-link { color: #77866e; text-decoration: none; font-size: 10px; }
@@ -209,6 +223,11 @@ kbd { padding: 2px 5px; border: 1px solid #e6e4dc; border-radius: 3px; color: #9
   .hero-actions { gap: 8px; }
   .hero-link, .hero-admin-link { min-height: 35px; padding: 0 10px; font-size: 9px; }
   .posts-section { padding: 48px 19px 58px; }
+  .shop-hero { padding: 55px 25px 42px; }
+  .shop-hero h1 { font-size: clamp(40px, 11vw, 54px); letter-spacing: -2.4px; }
+  .shop-section { padding: 42px 19px 58px; }
+  .shop-section .section-heading h2 { font-size: 24px; }
+  .shop-grid { grid-template-columns: 1fr; gap: 11px; }
   .section-heading { flex-direction: column; align-items: stretch; gap: 13px; }
   .section-heading h2 { font-size: 25px; }
   .section-heading .search-box { width: 100%; height: 42px; justify-content: flex-start; padding: 0 10px; }

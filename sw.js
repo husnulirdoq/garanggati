@@ -1,6 +1,6 @@
-const CACHE_NAME = "ruang-blog-v4";
+const CACHE_NAME = "ruang-blog-v5";
 const BUILD_CHUNKS = [];
-const APP_SHELL = ["/index.html", "/admin/index.html", "/styles.css", "/blog.js", "/admin.js", "/posts.json", "/manifest.json", "/icon.svg", "/icon-192.png", "/icon-512.png", ...BUILD_CHUNKS];
+const APP_SHELL = ["/index.html", "/admin/index.html", "/shop/index.html", "/styles.css", "/blog.js", "/admin.js", "/posts.json", "/manifest.json", "/icon.svg", "/icon-192.png", "/icon-512.png", ...BUILD_CHUNKS];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -33,7 +33,14 @@ self.addEventListener("fetch", (event) => {
           }
           return response;
         })
-        .catch(async () => (await caches.match(event.request)) || (await caches.match(url.pathname.startsWith("/admin") ? "/admin/index.html" : "/index.html"))),
+        .catch(async () => {
+          const fallback = url.pathname.startsWith("/admin")
+            ? "/admin/index.html"
+            : url.pathname.startsWith("/shop")
+              ? "/shop/index.html"
+              : "/index.html";
+          return (await caches.match(event.request)) || (await caches.match(fallback));
+        }),
     );
     return;
   }
