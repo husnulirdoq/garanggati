@@ -15,7 +15,7 @@ Firebase Web config yang dipakai situs bukan password atau service-account key. 
 7. Buka tab **Rules**, tempel isi `firestore.rules`, lalu tekan **Publish**. Aturan mengizinkan publik membaca tulisan yang terbit dan hanya UID admin yang mengubah data.
 8. Di **Authentication → Settings → Authorized domains**, tambahkan `garanggati.web.id`. Tambahkan `localhost` untuk pengujian lokal bila belum tercantum.
 9. Commit perubahan `firebase-config.js` dan `firestore.rules` ke `main`. GitHub Actions akan membangun ulang situs.
-10. Buka `https://garanggati.web.id/admin/`, masuk dengan akun admin, lalu pilih **Impor 5 tulisan awal** jika ingin memindahkan tulisan contoh ke Firestore.
+10. Buka `https://garanggati.web.id/admin/`, masuk dengan akun admin, lalu pilih **Impor tulisan dari Codespaces** untuk menambahkan artikel Markdown yang belum ada di Firestore. Artikel Firestore yang sudah ada tidak ditimpa.
 
 Firebase Web config memang tampil di bundle publik; itu normal untuk aplikasi web. Jangan pernah mengunggah password admin, token, private key, atau service-account JSON. Proteksi penulisan berasal dari Firestore Rules, bukan dari menyembunyikan URL admin.
 
@@ -23,9 +23,9 @@ Paket Spark tidak memerlukan metode pembayaran untuk mulai. Kuota Firebase saat 
 
 ## Menulis artikel
 
-Buka `/admin/`, masuk, lalu buat atau edit tulisan. Alamat artikel dibuat otomatis dari judul. Pilih salah satu topik yang tersedia dan tulis langsung di editor visual; tombol pemformatan tersedia jika diperlukan. Centang **Terbitkan tulisan** agar artikel terlihat di blog.
+Buka `/admin/`, masuk, lalu buat atau edit tulisan. Slug menjadi alamat artikel dan tidak dapat diubah sesudah dibuat. Centang **Terbitkan tulisan** agar artikel terlihat di blog. Isi artikel mendukung Markdown.
 
-Artikel terbit dalam `content/posts/` ditampilkan bersama artikel terbit dari Firestore. Jika slug sama, versi Firestore yang digunakan. Gunakan tombol impor di admin untuk menambahkan artikel Codespaces yang belum ada; artikel yang sudah ada tidak ditimpa.
+Artikel awal dalam `content/posts/` dipakai untuk tampilan statis sebelum Firebase dikonfigurasi dan sebagai sumber impor pertama. Setelah tulisan diimpor, Firestore menjadi sumber utama untuk blog dan panel admin.
 
 Karena GitHub Pages tidak menjalankan server, isi Firestore dimuat oleh browser. Halaman publik tetap bisa dibaca tanpa login, tetapi artikel dinamis tidak dipra-render saat build; SEO, sitemap artikel, feed RSS, dan pratinjau tautan sosial belum sekuat CMS yang menghasilkan halaman statis per artikel. Jangan simpan artikel rahasia di Firestore; pengunjung dapat membaca semua dokumen yang berstatus terbit.
 
