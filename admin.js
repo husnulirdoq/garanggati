@@ -1,4 +1,6 @@
 import { onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import DOMPurify from "dompurify";
+import { marked } from "marked";
 import {
   collection,
   deleteDoc,
@@ -18,6 +20,10 @@ const form = document.querySelector("#post-form");
 const postList = document.querySelector("#admin-post-list");
 const listStatus = document.querySelector("#post-list-status");
 const slugInput = document.querySelector("#post-slug");
+const bodyInput = document.querySelector("#post-body");
+const bodyCount = document.querySelector("#body-count");
+const bodyPreview = document.querySelector("#post-preview");
+const editorStatus = document.querySelector("#editor-status");
 let currentPosts = [];
 
 function showNotice(message, type = "error") {
@@ -45,6 +51,35 @@ function resetForm() {
   delete slugInput.dataset.edited;
   document.querySelector("#editor-title").textContent = "Tulisan baru";
   document.querySelector("#delete-post-button").hidden = true;
+  updatePreview();
+  editorStatus.textContent = "";
+  delete editorStatus.dataset.dirty;
+  delete editorStatus.dataset.saved;
+}
+
+function updatePreview() {
+  bodyCount.textContent = `${bodyInput.value.length.toLocaleString("id-ID")} / 50.000`;
+  bodyPreview.innerHTML = bodyInput.value
+    ? DOMPurify.sanitize(marked.parse(bodyInput.value))
+    : "";
+}
+
+function selectEditorTab(tab) {
+  const writing = tab === "write";
+  document.querySelector("#write-tab").classList.toggle("active", writing);
+  document.querySelector("#write-tab").setAttribute("aria-selected", String(writing));
+  document.querySelector("#preview-tab").classList.toggle("active", !writing);
+  document.querySelector("#preview-tab").setAttribute("aria-selected", String(!writing));
+  bodyInput.hidden = !writing;
+  bodyPreview.hidden = writing;
+  if (!writing) updatePreview();
+}
+
+function setEditorStatus(message, state) {
+  editorStatus.textContent = message;
+  delete editorStatus.dataset.dirty;
+  delete editorStatus.dataset.saved;
+  if (state) editorStatus.dataset[state] = "true";
 }
 
 function renderPosts() {
@@ -100,6 +135,9 @@ function editPost(post) {
   document.querySelector("#post-published").checked = post.published;
   document.querySelector("#editor-title").textContent = "Edit tulisan";
   document.querySelector("#delete-post-button").hidden = false;
+  updatePreview();
+  setEditorStatus("Mengedit tulisan yang tersimpan.");
+  selectEditorTab("write");
   document.querySelector("#post-title").focus();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
@@ -109,11 +147,25 @@ document.querySelector("#login-form").addEventListener("submit", async (event) =
   clearNotice();
   const email = document.querySelector("#login-email").value.trim();
   const password = document.querySelector("#login-password").value;
+  const submitButton = event.currentTarget.querySelector('button[type="submit"]');
+  submitButton.disabled = true;
+  submitButton.textContent = "Memeriksa akun…";
   try {
     await signInWithEmailAndPassword(auth, email, password);
   } catch (error) {
     console.error("Login admin gagal.", error);
-    showNotice("Login gagal. Periksa email/kata sandi dan pastikan akun admin sudah dibuat di Firebase Authentication.");
+    const messages = {
+      "auth/invalid-credential": "Email atau kata sandi tidak cocok. Coba lagi atau gunakan tautan lupa kata sandi.",
+      "auth/invalid-email": "Format email belum benar.",
+      "auth/too-many-requests": "Terlalu banyak percobaan. Tunggu sebentar sebelum mencoba lagi.",
+      "auth/network-request-failed": "Koneksi bermasalah. Periksa internet lalu coba lagi.",
+      "auth/operation-not-allowed": "Login email belum diaktifkan di Firebase Authentication.",
+      "auth/unauthorized-domain": "Domain situs belum diizinkan di Firebase Authentication.",
+    };
+    showNotice(messages[error.code] ?? "Login gagal. Periksa email dan kata sandi, lalu coba lagi.");
+  } finally {
+    submitButton.disabled = false;
+    submitButton.innerHTML = 'Masuk ke dashboard <span aria-hidden="true">→</span>';
   }
 });
 
@@ -153,11 +205,17 @@ document.querySelector("#cancel-edit-button").addEventListener("click", () => {
   resetForm();
   clearNotice();
 });
+document.querySelector("#write-tab").addEventListener("click", () => selectEditorTab("write"));
+document.querySelector("#preview-tab").addEventListener("click", () => selectEditorTab("preview"));
 
 document.querySelector("#post-title").addEventListener("input", (event) => {
   if (!slugInput.readOnly && !slugInput.dataset.edited) slugInput.value = slugify(event.currentTarget.value);
 });
 slugInput.addEventListener("input", () => { slugInput.dataset.edited = "true"; });
+form.addEventListener("input", (event) => {
+  if (event.target === bodyInput) updatePreview();
+  setEditorStatus("Ada perubahan yang belum disimpan.", "dirty");
+});
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -197,6 +255,7 @@ form.addEventListener("submit", async (event) => {
     await setDoc(doc(db, "posts", slug), post);
     showNotice("Tulisan berhasil disimpan.", "success");
     resetForm();
+    setEditorStatus("Perubahan tersimpan.", "saved");
     await loadPosts();
   } catch (error) {
     console.error("Tulisan gagal disimpan ke Firestore.", error);
@@ -246,6 +305,7 @@ document.querySelector("#import-posts-button").addEventListener("click", async (
 
 document.querySelector("#login-email").value = "";
 document.querySelector("#post-date").value = new Date().toISOString().slice(0, 10);
+updatePreview();
 if (!firebaseConfigured) {
   document.querySelector("#login-form").querySelectorAll("input, button").forEach((element) => { element.disabled = true; });
   showNotice("Firebase belum dikonfigurasi. Ikuti bagian setup Firebase di README sebelum menggunakan panel admin.");

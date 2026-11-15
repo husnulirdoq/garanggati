@@ -194,7 +194,7 @@ def build_home(posts):
         <h1>Gagasan layak<br> diberi <span>ruang.</span></h1>
         <p class="hero-copy">Tulisan tentang filsafat, bahasa, teknologi, dan cara kita belajar—dikumpulkan sambil terus berpikir.</p>
         <div class="hero-actions">
-          <a class="hero-link" href="#tulisan">Lihat sebagai pengunjung <span aria-hidden="true">↓</span></a>
+          <a class="hero-link" href="#tulisan">Baca tulisan <span aria-hidden="true">↓</span></a>
           <a class="hero-admin-link" href="/admin/">Login admin <span aria-hidden="true">↗</span></a>
         </div>
         <span class="hero-decoration" aria-hidden="true">✳</span>

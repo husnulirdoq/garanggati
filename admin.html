@@ -19,32 +19,44 @@
     </header>
     <main class="admin-main">
       <section class="admin-intro">
-        <p class="eyebrow">PANEL ADMIN</p>
+        <p class="eyebrow">RUANG EDITORIAL</p>
         <h1>Kelola tulisan<span class="brand-period">.</span></h1>
-        <p>Masuk untuk membuat, memperbarui, dan menerbitkan artikel.</p>
+        <p>Masuk sebagai admin untuk membuat, mengedit, dan menerbitkan tulisan.</p>
       </section>
 
       <div class="admin-notice" id="admin-notice" role="status" aria-live="polite" hidden></div>
 
-      <section class="admin-panel login-panel" id="login-panel">
-        <h2>Masuk admin</h2>
-        <p class="panel-description">Akun admin dibuat dari Firebase Console. Pendaftaran publik tidak tersedia.</p>
-        <form id="login-form">
-          <label for="login-email">Email</label>
-          <input id="login-email" type="email" autocomplete="username" required>
-          <label for="login-password">Kata sandi</label>
-          <input id="login-password" type="password" autocomplete="current-password" required>
-          <div class="login-actions">
-            <button class="primary-button" type="submit">Masuk <span aria-hidden="true">→</span></button>
-            <button class="text-button" id="reset-password-button" type="button">Lupa kata sandi?</button>
-          </div>
-        </form>
-      </section>
+      <div class="login-layout" id="login-panel">
+        <section class="login-context">
+          <span class="login-context-icon" aria-hidden="true">✳</span>
+          <p class="eyebrow">KHUSUS PENGELOLA</p>
+          <h2>Selamat datang kembali.</h2>
+          <p>Masuk untuk mengelola tulisan. Pengunjung blog tidak perlu membuat akun.</p>
+          <a href="/">← Kembali membaca sebagai pengunjung</a>
+        </section>
+        <section class="admin-panel login-panel">
+          <h2>Masuk admin</h2>
+          <p class="panel-description">Gunakan akun yang dibuat di Firebase. Pendaftaran publik tidak tersedia.</p>
+          <form id="login-form">
+            <label for="login-email">Email</label>
+            <input id="login-email" type="email" autocomplete="username" required>
+            <label for="login-password">Kata sandi</label>
+            <input id="login-password" type="password" autocomplete="current-password" required>
+            <div class="login-actions">
+              <button class="primary-button" type="submit">Masuk ke dashboard <span aria-hidden="true">→</span></button>
+              <button class="text-button" id="reset-password-button" type="button">Lupa kata sandi?</button>
+            </div>
+          </form>
+        </section>
+      </div>
 
       <section class="admin-workspace" id="admin-workspace" hidden>
         <div class="admin-toolbar">
-          <p id="signed-in-email"></p>
-          <button class="secondary-button" id="sign-out-button" type="button">Keluar</button>
+          <div>
+            <p class="eyebrow">DASHBOARD ADMIN</p>
+            <p id="signed-in-email"></p>
+          </div>
+          <button class="secondary-button" id="sign-out-button" type="button"><span aria-hidden="true">↪</span> Keluar</button>
         </div>
         <section class="admin-panel">
           <div class="editor-heading">
@@ -79,9 +91,19 @@
             </div>
             <label for="post-excerpt">Ringkasan</label>
             <textarea id="post-excerpt" rows="2" maxlength="300" required></textarea>
-            <label for="post-body">Isi artikel (Markdown)</label>
-            <textarea id="post-body" rows="12" maxlength="50000" required></textarea>
+            <div class="field-heading">
+              <label for="post-body">Isi artikel</label>
+              <span id="body-count">0 / 50.000</span>
+            </div>
+            <div class="editor-tabs" role="tablist" aria-label="Mode editor artikel">
+              <button class="editor-tab active" id="write-tab" type="button" role="tab" aria-selected="true">Tulis Markdown</button>
+              <button class="editor-tab" id="preview-tab" type="button" role="tab" aria-selected="false">Pratinjau</button>
+            </div>
+            <textarea id="post-body" rows="12" maxlength="50000" aria-describedby="markdown-help" required></textarea>
+            <div class="markdown-preview" id="post-preview" role="tabpanel" hidden></div>
+            <p class="field-help" id="markdown-help">Gunakan Markdown untuk subjudul, tautan, kutipan, dan daftar.</p>
             <label class="publish-toggle"><input id="post-published" type="checkbox" checked> Terbitkan tulisan</label>
+            <p class="editor-status" id="editor-status" aria-live="polite"></p>
             <div class="editor-actions">
               <button class="delete-button" id="delete-post-button" type="button" hidden>Hapus tulisan</button>
               <div class="editor-action-right">

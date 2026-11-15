@@ -39,11 +39,16 @@ class BlogBuildTests(unittest.TestCase):
             home = (output_directory / "index.html").read_text(encoding="utf-8")
             self.assertIn("Tulisan publik", home)
             self.assertNotIn("Tulisan draf", home)
+            self.assertIn("Baca tulisan", home)
+            self.assertIn("Login admin", home)
             self.assertTrue((output_directory / "posts/public-post/index.html").is_file())
             self.assertFalse((output_directory / "posts/draft-post/index.html").exists())
             posts = json.loads((output_directory / "posts.json").read_text(encoding="utf-8"))
             self.assertEqual([post["slug"] for post in posts], ["public-post"])
-            self.assertTrue((output_directory / "admin/index.html").is_file())
+            admin_page = output_directory / "admin/index.html"
+            self.assertTrue(admin_page.is_file())
+            self.assertIn("Masuk admin", admin_page.read_text(encoding="utf-8"))
+            self.assertIn("Pratinjau", admin_page.read_text(encoding="utf-8"))
             sitemap = ET.parse(output_directory / "sitemap.xml")
             self.assertEqual(len(sitemap.findall(".//{*}loc")), 1)
 
