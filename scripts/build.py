@@ -140,6 +140,31 @@ def post_card(post):
     """
 
 
+def social_links():
+    return """
+      <nav class="social-links" aria-label="Ikuti kami di media sosial">
+        <a href="https://x.com/husnulirdoq" target="_blank" rel="noopener noreferrer" aria-label="X">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.64 7.584H.47l8.6-9.83L0 1.154h7.594l5.243 6.931zm-1.29 19.49h2.039L6.486 3.24H4.298z"/></svg>
+        </a>
+        <a href="https://www.facebook.com/husnulirdoq" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 21v-8.2h2.8l.42-3.2H13.5V7.56c0-.93.26-1.56 1.6-1.56h1.71V3.14A22.4 22.4 0 0 0 14.32 3C11.86 3 10.18 4.5 10.18 7.26V9.6H7.4v3.2h2.78V21z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/husnulirdoq/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2m0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4zm9.75 1.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10m0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6"/></svg>
+        </a>
+        <a href="https://wa.me/628175404449" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Business">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2a9.9 9.9 0 0 0-8.47 15.03L2 22l5.1-1.53A9.9 9.9 0 1 0 12.04 2m0 1.9a8 8 0 0 1 0 16 7.9 7.9 0 0 1-4.1-1.14l-.3-.18-3.02.9.92-2.94-.2-.32A8 8 0 0 1 12.04 3.9m-3.4 3.4c-.2 0-.52.07-.8.38-.27.3-1.05 1.03-1.05 2.5s1.08 2.9 1.23 3.1c.15.2 2.09 3.34 5.16 4.55 2.55 1 3.07.8 3.63.75.55-.05 1.78-.73 2.03-1.43.25-.7.25-1.3.17-1.43-.08-.13-.28-.2-.6-.36-.3-.15-1.78-.88-2.05-.98-.28-.1-.48-.15-.68.15-.2.3-.78.98-.95 1.18-.17.2-.35.22-.65.07-.3-.15-1.28-.47-2.44-1.5-.9-.8-1.5-1.8-1.68-2.1-.18-.3-.02-.47.13-.62.13-.13.3-.35.45-.53.15-.17.2-.3.3-.5.1-.2.05-.38-.03-.53-.07-.15-.67-1.62-.92-2.22-.24-.57-.49-.5-.67-.5z"/></svg>
+        </a>
+        <a href="https://www.youtube.com/@husnulirdoq" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.55 3.6 12 3.6 12 3.6s-7.55 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.85.5 9.4.5 9.4.5s7.55 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8M9.6 15.6V8.4l6.3 3.6z"/></svg>
+        </a>
+        <a href="https://www.linkedin.com/in/husnul-aqib-st-85002454/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 2H3.55C2.69 2 2 2.68 2 3.53v16.94c0 .85.69 1.53 1.55 1.53h16.9c.86 0 1.55-.68 1.55-1.53V3.53c0-.85-.69-1.53-1.55-1.53M7.93 18.9H4.98V9.4h2.95zM6.45 8.1a1.71 1.71 0 1 1 0-3.42 1.71 1.71 0 0 1 0 3.42M19 18.9h-2.94v-4.62c0-1.1-.02-2.52-1.54-2.52-1.55 0-1.79 1.2-1.79 2.44v4.7H9.8V9.4h2.82v1.3h.04c.39-.74 1.35-1.52 2.77-1.52 2.97 0 3.52 1.95 3.52 4.48z"/></svg>
+        </a>
+      </nav>
+    """
+
+
 def shell(title, description, body, canonical, extra_head="", og_type="website"):
     return f"""<!doctype html>
 <html lang="id">
@@ -177,6 +202,7 @@ def shell(title, description, body, canonical, extra_head="", og_type="website")
     <footer class="site-footer">
       <a class="footer-brand" href="/">ruang<span class="brand-period">.</span></a>
       <span>Ruang kecil untuk pikiran besar.</span>
+      {social_links()}
       <a href="/admin/">Login admin <span aria-hidden="true">↗</span></a>
     </footer>
     <script type="module" src="/blog.js"></script>

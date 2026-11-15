@@ -42,6 +42,17 @@ class BlogBuildTests(unittest.TestCase):
             self.assertIn("Baca tulisan", home)
             self.assertIn("Login admin", home)
             self.assertNotIn("Catatan baru", home)
+            for social_url in (
+                "https://x.com/husnulirdoq",
+                "https://www.facebook.com/husnulirdoq",
+                "https://www.instagram.com/husnulirdoq/",
+                "https://wa.me/628175404449",
+                "https://www.youtube.com/@husnulirdoq",
+                "https://www.linkedin.com/in/husnul-aqib-st-85002454/",
+            ):
+                self.assertIn(social_url, home)
+            for social_label in ("X", "Facebook", "Instagram", "WhatsApp Business", "YouTube", "LinkedIn"):
+                self.assertIn(f'aria-label="{social_label}"', home)
             self.assertTrue((output_directory / "posts/public-post/index.html").is_file())
             self.assertFalse((output_directory / "posts/draft-post/index.html").exists())
             posts = json.loads((output_directory / "posts.json").read_text(encoding="utf-8"))

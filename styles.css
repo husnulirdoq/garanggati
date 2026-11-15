@@ -80,6 +80,11 @@ kbd { padding: 2px 5px; border: 1px solid #e6e4dc; border-radius: 3px; color: #9
 .site-footer { display: flex; min-height: 79px; align-items: center; justify-content: space-between; gap: 15px; padding: 18px max(7vw, calc((100vw - 1180px) / 2)); border-top: 1px solid var(--line); color: #999a91; font-size: 9px; }
 .footer-brand { color: #55574f; text-decoration: none; font: 800 17px "Segoe UI", sans-serif; letter-spacing: -1px; }
 .site-footer > a:last-child { color: #77866e; text-decoration: none; }
+.social-links { display: flex; align-items: center; gap: 12px; }
+.social-links a { display: grid; width: 28px; height: 28px; place-items: center; border-radius: 5px; color: #85867e; transition: background .16s, color .16s; }
+.social-links a:hover { background: var(--green-pale); color: var(--green-dark); }
+.social-links a:focus-visible { outline: 3px solid rgb(88 116 86 / 30%); outline-offset: 2px; }
+.social-links svg { width: 16px; height: 16px; fill: currentColor; }
 
 .article-layout { display: grid; grid-template-columns: minmax(0, 720px) minmax(170px, 230px); gap: 65px; max-width: 1080px; min-height: calc(100vh - 153px); margin: 0 auto; padding: 40px 20px 75px; }
 .breadcrumbs { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 9px; color: #a1a198; font-size: 10px; }
