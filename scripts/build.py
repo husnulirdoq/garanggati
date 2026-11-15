@@ -169,14 +169,14 @@ def shell(title, description, body, canonical, extra_head="", og_type="website")
       <nav class="site-nav" aria-label="Navigasi utama">
         <a href="/#tulisan">Tulisan</a>
         <a href="/#topik">Topik</a>
-        <a href="/admin/">Admin</a>
+        <a class="admin-login-link" href="/admin/">Login admin</a>
       </nav>
     </header>
     {body}
     <footer class="site-footer">
       <a class="footer-brand" href="/">ruang<span class="brand-period">.</span></a>
       <span>Ruang kecil untuk pikiran besar.</span>
-      <a href="/admin/">Kelola tulisan <span aria-hidden="true">↗</span></a>
+      <a href="/admin/">Login admin <span aria-hidden="true">↗</span></a>
     </footer>
     <script type="module" src="/blog.js"></script>
   </body>
@@ -193,7 +193,10 @@ def build_home(posts):
         <p class="eyebrow">CATATAN TENTANG HAL-HAL YANG MENARIK</p>
         <h1>Gagasan layak<br> diberi <span>ruang.</span></h1>
         <p class="hero-copy">Tulisan tentang filsafat, bahasa, teknologi, dan cara kita belajar—dikumpulkan sambil terus berpikir.</p>
-        <a class="hero-link" href="#tulisan">Jelajahi tulisan <span aria-hidden="true">↓</span></a>
+        <div class="hero-actions">
+          <a class="hero-link" href="#tulisan">Lihat sebagai pengunjung <span aria-hidden="true">↓</span></a>
+          <a class="hero-admin-link" href="/admin/">Login admin <span aria-hidden="true">↗</span></a>
+        </div>
         <span class="hero-decoration" aria-hidden="true">✳</span>
       </section>
       <section class="posts-section" id="tulisan">

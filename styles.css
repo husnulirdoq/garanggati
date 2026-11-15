@@ -27,15 +27,22 @@ button { color: inherit; }
 .site-nav a { color: #777970; text-decoration: none; font-size: 11px; transition: color .16s; }
 .site-nav a:hover { color: var(--green-dark); }
 .site-nav a span { color: #aaa99f; font-size: 10px; }
+.site-nav .admin-login-link { display: inline-flex; min-height: 34px; align-items: center; padding: 0 12px; border: 1px solid #d6dfd0; border-radius: 5px; background: var(--green-pale); color: var(--green-dark); font-weight: 600; }
+.site-nav .admin-login-link:hover { border-color: #b7c5ae; background: #e4ebdf; }
 
 .hero { position: relative; overflow: hidden; min-height: 390px; padding: 87px max(11vw, calc((100vw - 1080px) / 2)) 68px; border-bottom: 1px solid var(--line); background: linear-gradient(110deg, #f3f2ec 0%, #f7f6f2 63%, #eeefe7 100%); }
 .eyebrow { margin: 0 0 15px; color: #96978c; font-size: 9px; font-weight: 700; letter-spacing: 1.5px; }
 .hero h1 { position: relative; z-index: 1; margin: 0; font: 600 clamp(43px, 6vw, 68px)/1.12 "Segoe UI", sans-serif; letter-spacing: -3.4px; }
 .hero h1 span { color: var(--green); }
 .hero-copy { position: relative; z-index: 1; max-width: 410px; margin: 17px 0 0; color: #777970; font-size: 12px; line-height: 1.8; }
-.hero-link { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 10px; margin-top: 23px; color: var(--green-dark); text-decoration: none; font-size: 11px; font-weight: 600; }
+.hero-actions { position: relative; z-index: 1; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 23px; }
+.hero-link, .hero-admin-link { display: inline-flex; min-height: 38px; align-items: center; justify-content: center; gap: 9px; padding: 0 13px; border: 1px solid var(--green); border-radius: 5px; background: var(--green); color: white; text-decoration: none; font-size: 10px; font-weight: 600; transition: background .16s, border-color .16s; }
+.hero-link:hover { border-color: var(--green-dark); background: var(--green-dark); }
+.hero-admin-link { border-color: #d6dfd0; background: rgb(255 254 250 / 75%); color: var(--green-dark); }
+.hero-admin-link:hover { border-color: #b7c5ae; background: #fffefa; }
 .hero-link span { font-size: 15px; transition: transform .16s; }
 .hero-link:hover span { transform: translateY(3px); }
+.hero-admin-link span { color: #96978c; font-size: 10px; }
 .hero-decoration { position: absolute; top: 67px; right: max(11vw, calc((100vw - 1080px) / 2)); color: rgb(182 163 111 / 20%); font-size: 196px; line-height: 1; }
 
 .posts-section { max-width: 1080px; min-height: 470px; margin: 0 auto; padding: 69px 20px 82px; }
@@ -161,12 +168,15 @@ kbd { padding: 2px 5px; border: 1px solid #e6e4dc; border-radius: 3px; color: #9
   .site-header { height: 62px; padding: 0 19px; }
   .brand { gap: 8px; font-size: 21px; }
   .brand-mark { width: 30px; height: 30px; font-size: 18px; }
-  .site-nav { gap: 16px; }
+  .site-nav { gap: 12px; }
   .site-nav a { font-size: 10px; }
+  .site-nav .admin-login-link { min-height: 31px; padding: 0 9px; }
   .hero { min-height: 345px; padding: 72px 25px 50px; }
   .hero h1 { font-size: clamp(44px, 12vw, 58px); letter-spacing: -2.7px; }
   .hero-copy { max-width: 330px; font-size: 11px; }
   .hero-decoration { top: 138px; right: 3px; font-size: 112px; }
+  .hero-actions { gap: 8px; }
+  .hero-link, .hero-admin-link { min-height: 35px; padding: 0 10px; font-size: 9px; }
   .posts-section { padding: 48px 19px 58px; }
   .section-heading { align-items: flex-start; }
   .section-heading h2 { font-size: 25px; }
