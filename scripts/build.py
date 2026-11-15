@@ -314,13 +314,35 @@ def build_shop():
               Lihat toko di TikTok <span aria-hidden="true">↗</span>
             </a>
           </article>
+          <article class="post-card shop-card">
+            <div class="post-meta">
+              <span class="category-pill">Marketplace</span>
+              <span class="shop-platform">Blibli</span>
+            </div>
+            <h2>Blibli</h2>
+            <p>Temukan produk Garanggati melalui toko kami di Blibli.</p>
+            <a class="read-link" href="https://blibli.onelink.me/GNtk/hav3xy4g" target="_blank" rel="noopener noreferrer">
+              Lihat toko di Blibli <span aria-hidden="true">↗</span>
+            </a>
+          </article>
+          <article class="post-card shop-card">
+            <div class="post-meta">
+              <span class="category-pill">Marketplace</span>
+              <span class="shop-platform">Lazada</span>
+            </div>
+            <h2>Lazada</h2>
+            <p>Temukan produk Garanggati melalui toko kami di Lazada.</p>
+            <a class="read-link" href="https://www.lazada.co.id/shop/garanggati-shop/" target="_blank" rel="noopener noreferrer">
+              Lihat toko di Lazada <span aria-hidden="true">↗</span>
+            </a>
+          </article>
         </div>
       </section>
     </main>
     """
     return shell(
         "Shop Garanggati — " + SITE_NAME,
-        "Jelajahi toko Garanggati di Shopee dan TikTok Shop.",
+        "Jelajahi toko Garanggati di Shopee, TikTok Shop, Blibli, dan Lazada.",
         body,
         BASE_URL + "/shop/",
     )
