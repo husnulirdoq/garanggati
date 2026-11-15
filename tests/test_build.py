@@ -53,6 +53,8 @@ class BlogBuildTests(unittest.TestCase):
                 self.assertIn(social_url, home)
             for social_label in ("X", "Facebook", "Instagram", "WhatsApp Business", "YouTube", "LinkedIn"):
                 self.assertIn(f'aria-label="{social_label}"', home)
+            self.assertIn('href="mailto:info@garanggati.web.id"', home)
+            self.assertIn(">info@garanggati.web.id</a>", home)
             self.assertTrue((output_directory / "posts/public-post/index.html").is_file())
             self.assertFalse((output_directory / "posts/draft-post/index.html").exists())
             posts = json.loads((output_directory / "posts.json").read_text(encoding="utf-8"))

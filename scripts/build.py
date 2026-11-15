@@ -202,7 +202,10 @@ def shell(title, description, body, canonical, extra_head="", og_type="website")
     <footer class="site-footer">
       <a class="footer-brand" href="/">ruang<span class="brand-period">.</span></a>
       <span>Ruang kecil untuk pikiran besar.</span>
-      {social_links()}
+      <div class="footer-socials">
+        {social_links()}
+        <a class="footer-email" href="mailto:info@garanggati.web.id">info@garanggati.web.id</a>
+      </div>
       <a href="/admin/">Login admin <span aria-hidden="true">↗</span></a>
     </footer>
     <script type="module" src="/blog.js"></script>
