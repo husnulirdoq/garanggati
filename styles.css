@@ -96,6 +96,12 @@ kbd { padding: 2px 5px; border: 1px solid #e6e4dc; border-radius: 3px; color: #9
 .article-header h1 { max-width: 690px; margin: 15px 0 10px; font: 600 clamp(30px, 4vw, 43px)/1.22 "Segoe UI", sans-serif; letter-spacing: -1.7px; }
 .article-excerpt { max-width: 620px; margin: 0 0 17px; color: #777970; font-size: 13px; line-height: 1.75; }
 .article-header time { color: #a1a198; font-size: 10px; }
+.article-share { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 17px; }
+.article-share-button { min-height: 36px; padding: 0 12px; border: 1px solid #d6dfd0; border-radius: 5px; background: var(--green-pale); color: var(--green-dark); cursor: pointer; font-size: 10px; font-weight: 600; transition: background .16s, border-color .16s; }
+.article-share-button:hover { border-color: #b7c5ae; background: #e4ebdf; }
+.article-share-button:focus-visible { outline: 3px solid rgb(88 116 86 / 30%); outline-offset: 2px; }
+.article-share-button:disabled { cursor: wait; opacity: .7; }
+.article-share-status { color: #777970; font-size: 10px; }
 .article-body { padding: 25px 0 8px; color: #50534c; font: 15px/1.9 Georgia, serif; overflow-wrap: anywhere; }
 .article-body h2, .article-body h3, .article-body h4 { margin: 1.8em 0 .55em; color: var(--ink); font-family: "Segoe UI", sans-serif; line-height: 1.35; }
 .article-body h2 { font-size: 23px; }.article-body h3 { font-size: 19px; }.article-body h4 { font-size: 16px; }

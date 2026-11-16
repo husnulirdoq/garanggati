@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 POSTS_DIR = ROOT / "content" / "posts"
 OUTPUT = ROOT / "_site"
 BASE_URL = "https://garanggati.web.id"
+GA4_MEASUREMENT_ID = "G-N45PK2BMN5"
 SITE_NAME = "Ruang"
 SITE_DESCRIPTION = "Catatan tentang filsafat, bahasa, teknologi, dan cara belajar."
 ALLOWED_TAGS = {
@@ -183,6 +184,13 @@ def shell(title, description, body, canonical, extra_head="", og_type="website")
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="/styles.css">
     <title>{escape(title)}</title>
+    <script async src="https://www.googletagmanager.com/gtag/js?id={GA4_MEASUREMENT_ID}"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){{dataLayer.push(arguments);}}
+      gtag('js', new Date());
+      gtag('config', '{GA4_MEASUREMENT_ID}');
+    </script>
     {extra_head}
   </head>
   <body>
@@ -279,6 +287,12 @@ def build_post(post, recent_posts):
           <h1>{escape(post['title'])}</h1>
           <p class="article-excerpt">{escape(post['excerpt'])}</p>
           <time datetime="{post['date'].isoformat()}">{format_date(post['date'])}</time>
+          <div class="article-share">
+            <button class="article-share-button" type="button" data-share-article
+              data-share-url="{escape(BASE_URL + post_url(post) + '&utm_source=article_share&utm_medium=social&utm_campaign=article_share')}"
+              data-share-title="{escape(post['title'])}">Bagikan artikel</button>
+            <span class="article-share-status" data-share-status role="status" aria-live="polite"></span>
+          </div>
         </header>
         <div class="article-body">{article_html}</div>
         <footer class="article-end">

@@ -37,6 +37,36 @@ function postLink(slug) {
   return `/?post=${encodeURIComponent(slug)}`;
 }
 
+function postShareLink(slug) {
+  const url = new URL(postLink(slug), "https://garanggati.web.id");
+  url.searchParams.set("utm_source", "article_share");
+  url.searchParams.set("utm_medium", "social");
+  url.searchParams.set("utm_campaign", "article_share");
+  return url.toString();
+}
+
+function makeShareControls(post) {
+  const controls = document.createElement("div");
+  controls.className = "article-share";
+
+  const button = document.createElement("button");
+  button.className = "article-share-button";
+  button.type = "button";
+  button.dataset.shareArticle = "";
+  button.dataset.shareUrl = postShareLink(post.slug);
+  button.dataset.shareTitle = post.title;
+  button.textContent = "Bagikan artikel";
+
+  const status = document.createElement("span");
+  status.className = "article-share-status";
+  status.dataset.shareStatus = "";
+  status.setAttribute("role", "status");
+  status.setAttribute("aria-live", "polite");
+
+  controls.append(button, status);
+  return controls;
+}
+
 function makeCard(post) {
   const card = document.createElement("article");
   card.className = "post-card";
@@ -160,7 +190,7 @@ function renderArticle(post) {
   const date = document.createElement("time");
   date.dateTime = post.date;
   date.textContent = formatDate(post.date, true);
-  header.append(category, title, excerpt, date);
+  header.append(category, title, excerpt, date, makeShareControls(post));
 
   const content = document.createElement("div");
   content.className = "article-body";
@@ -215,6 +245,39 @@ function renderArticle(post) {
   const canonicalLink = document.querySelector('link[rel="canonical"]');
   if (canonicalLink) canonicalLink.href = canonical;
 }
+
+document.addEventListener("click", async (event) => {
+  const button = event.target.closest("[data-share-article]");
+  if (!button) return;
+
+  const status = button.parentElement.querySelector("[data-share-status]");
+  button.disabled = true;
+  window.gtag?.("event", "article_share_click", {
+    article_title: button.dataset.shareTitle,
+    article_url: button.dataset.shareUrl,
+    share_method: navigator.share ? "native" : "copy_link",
+  });
+  try {
+    if (navigator.share) {
+      await navigator.share({
+        title: button.dataset.shareTitle,
+        text: button.dataset.shareTitle,
+        url: button.dataset.shareUrl,
+      });
+    } else if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(button.dataset.shareUrl);
+      status.textContent = "Tautan artikel disalin.";
+    } else {
+      throw new Error("Fitur berbagi dan clipboard tidak tersedia.");
+    }
+  } catch (error) {
+    if (error.name === "AbortError") return;
+    console.error("Artikel gagal dibagikan.", error);
+    status.textContent = "Gagal membagikan. Salin alamat halaman dari bilah alamat.";
+  } finally {
+    button.disabled = false;
+  }
+});
 
 async function loadSeedPosts() {
   const response = await fetch("/posts.json");

@@ -6,7 +6,7 @@ Blog publik berbahasa Indonesia untuk filsafat, bahasa, teknologi, dan belajar. 
 
 Firebase Web config yang dipakai situs bukan password atau service-account key. Izin baca/tulis tetap harus dibatasi oleh Firestore Security Rules.
 
-1. Buat project di [Firebase Console](https://console.firebase.google.com/) dan pilih paket **Spark (no-cost)**. Google Analytics tidak dibutuhkan untuk blog ini.
+1. Buat project di [Firebase Console](https://console.firebase.google.com/) dan pilih paket **Spark (no-cost)**. GA4 terpisah dari Firebase (lihat bagian Analytics).
 2. Dari halaman Project Overview, tambahkan aplikasi **Web**. Salin nilai `apiKey`, `authDomain`, `projectId`, dan `appId` ke `firebase-config.js`, menggantikan nilai `REPLACE_WITH_...`.
 3. Di **Authentication → Sign-in method**, aktifkan **Email/Password**.
 4. Di **Authentication → Users**, pilih **Add user** untuk membuat akun admin. Setelah dibuat, UID ada di kolom **User UID**; bila tabel tidak menampilkannya, klik baris akun untuk membuka detail pengguna. Jangan menambahkan form pendaftaran publik.
@@ -20,6 +20,14 @@ Firebase Web config yang dipakai situs bukan password atau service-account key. 
 Firebase Web config memang tampil di bundle publik; itu normal untuk aplikasi web. Jangan pernah mengunggah password admin, token, private key, atau service-account JSON. Proteksi penulisan berasal dari Firestore Rules, bukan dari menyembunyikan URL admin.
 
 Paket Spark tidak memerlukan metode pembayaran untuk mulai. Kuota Firebase saat ini mencakup hingga 50.000 pengguna aktif bulanan untuk layanan Authentication non-SMS; Firestore menyediakan 1 GiB data tersimpan, 50.000 pembacaan/hari, 20.000 penulisan/hari, 20.000 penghapusan/hari, dan 10 GiB transfer keluar/bulan. Jika kuota Spark terlampaui, operasi dapat ditolak sampai kuota tersedia lagi. Lihat [harga Firebase](https://firebase.google.com/pricing) dan [kuota Firestore](https://firebase.google.com/docs/firestore/quotas).
+
+## Analytics (GA4)
+
+Halaman publik mengirim data langsung ke properti GA4 dengan Measurement ID `G-N45PK2BMN5`. Admin tidak mengirim data Analytics.
+
+Setelah situs diterbitkan, uji kunjungan dengan laporan **Realtime** di GA4. Klik tombol share mengirim event `article_share_click` dengan parameter `article_title`, `article_url`, dan `share_method`; gunakan **DebugView** untuk memeriksanya. Data kunjungan dapat dilihat pada **Traffic acquisition**.
+
+Tautan dari tombol share membawa `utm_source=article_share`, `utm_medium=social`, dan `utm_campaign=article_share`; laporan kampanye dapat membedakan kunjungan dari tautan share. Event `article_share_click` mengukur klik/percobaan berbagi, bukan memastikan tautannya benar-benar dikirim. Tombol share bawaan perangkat tidak memberi tahu platform tujuan. Pengiriman data bergantung pada izin browser, koneksi jaringan, dan pemblokir pelacak.
 
 ## Menulis artikel
 

@@ -37,6 +37,8 @@ class BlogBuildTests(unittest.TestCase):
                 build.build()
 
             home = (output_directory / "index.html").read_text(encoding="utf-8")
+            self.assertIn("G-N45PK2BMN5", home)
+            self.assertIn("https://www.googletagmanager.com/gtag/js?id=G-N45PK2BMN5", home)
             self.assertIn("Tulisan publik", home)
             self.assertNotIn("Tulisan draf", home)
             self.assertIn("Baca tulisan", home)
@@ -57,11 +59,21 @@ class BlogBuildTests(unittest.TestCase):
             self.assertIn(">info@garanggati.web.id</a>", home)
             self.assertTrue((output_directory / "posts/public-post/index.html").is_file())
             self.assertFalse((output_directory / "posts/draft-post/index.html").exists())
+            article_html = (output_directory / "posts/public-post/index.html").read_text(encoding="utf-8")
+            self.assertIn('data-share-article', article_html)
+            self.assertIn(
+                'data-share-url="https://garanggati.web.id/?post=public-post'
+                '&amp;utm_source=article_share&amp;utm_medium=social'
+                '&amp;utm_campaign=article_share"',
+                article_html,
+            )
+            self.assertIn('data-share-status role="status" aria-live="polite"', article_html)
             posts = json.loads((output_directory / "posts.json").read_text(encoding="utf-8"))
             self.assertEqual([post["slug"] for post in posts], ["public-post"])
             admin_page = output_directory / "admin/index.html"
             self.assertTrue(admin_page.is_file())
             admin_html = admin_page.read_text(encoding="utf-8")
+            self.assertNotIn("G-N45PK2BMN5", admin_html)
             self.assertIn("Masuk admin", admin_html)
             self.assertIn("Firebase Authentication", admin_html)
             self.assertIn("Pratinjau", admin_html)
