@@ -23,7 +23,7 @@ Paket Spark tidak memerlukan metode pembayaran untuk mulai. Kuota Firebase saat 
 
 ## Analytics (GA4)
 
-Halaman publik mengirim data langsung ke properti GA4 dengan Measurement ID `G-N45PK2BMN5`. Admin tidak mengirim data Analytics.
+Halaman publik mengirim data langsung ke properti GA4 dengan Measurement ID `G-9XYG7QZPFV`. Admin tidak mengirim data Analytics.
 
 Setelah situs diterbitkan, uji kunjungan dengan laporan **Realtime** di GA4. Klik tombol share mengirim event `article_share_click` dengan parameter `article_title`, `article_url`, dan `share_method`; gunakan **DebugView** untuk memeriksanya. Data kunjungan dapat dilihat pada **Traffic acquisition**.
 

@@ -37,8 +37,8 @@ class BlogBuildTests(unittest.TestCase):
                 build.build()
 
             home = (output_directory / "index.html").read_text(encoding="utf-8")
-            self.assertIn("G-N45PK2BMN5", home)
-            self.assertIn("https://www.googletagmanager.com/gtag/js?id=G-N45PK2BMN5", home)
+            self.assertIn("G-9XYG7QZPFV", home)
+            self.assertIn("https://www.googletagmanager.com/gtag/js?id=G-9XYG7QZPFV", home)
             self.assertIn("Tulisan publik", home)
             self.assertNotIn("Tulisan draf", home)
             self.assertIn("Baca tulisan", home)
@@ -73,7 +73,7 @@ class BlogBuildTests(unittest.TestCase):
             admin_page = output_directory / "admin/index.html"
             self.assertTrue(admin_page.is_file())
             admin_html = admin_page.read_text(encoding="utf-8")
-            self.assertNotIn("G-N45PK2BMN5", admin_html)
+            self.assertNotIn("G-9XYG7QZPFV", admin_html)
             self.assertIn("Masuk admin", admin_html)
             self.assertIn("Firebase Authentication", admin_html)
             self.assertIn("Pratinjau", admin_html)
