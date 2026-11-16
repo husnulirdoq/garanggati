@@ -195,9 +195,9 @@ def shell(title, description, body, canonical, extra_head="", og_type="website")
   </head>
   <body>
     <header class="site-header">
-      <a class="brand" href="/" aria-label="Ruang, halaman utama">
-        <span class="brand-mark" aria-hidden="true">r.</span>
-        <span>ruang<span class="brand-period">.</span></span>
+      <a class="brand" href="/" aria-label="Garanggati, halaman utama">
+        <span class="brand-mark" aria-hidden="true">✳</span>
+        <span>Garanggati</span>
       </a>
       <nav class="site-nav" aria-label="Navigasi utama">
         <a href="/#tulisan">Tulisan</a>
@@ -208,7 +208,7 @@ def shell(title, description, body, canonical, extra_head="", og_type="website")
     </header>
     {body}
     <footer class="site-footer">
-      <a class="footer-brand" href="/">ruang<span class="brand-period">.</span></a>
+      <a class="footer-brand" href="/">Garanggati</a>
       <span>Ruang kecil untuk pikiran besar.</span>
       <div class="footer-socials">
         {social_links()}

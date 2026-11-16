@@ -43,6 +43,10 @@ class BlogBuildTests(unittest.TestCase):
             self.assertNotIn("Tulisan draf", home)
             self.assertIn("Baca tulisan", home)
             self.assertIn("Login admin", home)
+            self.assertIn('aria-label="Garanggati, halaman utama"', home)
+            self.assertIn('<span class="brand-mark" aria-hidden="true">✳</span>', home)
+            self.assertIn("<span>Garanggati</span>", home)
+            self.assertIn('<a class="footer-brand" href="/">Garanggati</a>', home)
             self.assertNotIn("Catatan baru", home)
             for social_url in (
                 "https://x.com/husnulirdoq",
@@ -74,6 +78,9 @@ class BlogBuildTests(unittest.TestCase):
             self.assertTrue(admin_page.is_file())
             admin_html = admin_page.read_text(encoding="utf-8")
             self.assertNotIn("G-9XYG7QZPFV", admin_html)
+            self.assertIn('aria-label="Garanggati, halaman utama"', admin_html)
+            self.assertIn('<span class="brand-mark" aria-hidden="true">✳</span>', admin_html)
+            self.assertIn('<a class="footer-brand" href="/">Garanggati</a>', admin_html)
             self.assertIn("Masuk admin", admin_html)
             self.assertIn("Firebase Authentication", admin_html)
             self.assertIn("Pratinjau", admin_html)
