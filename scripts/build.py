@@ -153,6 +153,17 @@ def social_links():
         <a href="https://www.instagram.com/husnulirdoq/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2m0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4zm9.75 1.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10m0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6"/></svg>
         </a>
+        <a href="https://www.reddit.com/user/husnulirdoq/" target="_blank" rel="noopener noreferrer" aria-label="Reddit">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.8"/>
+            <circle cx="18.5" cy="5.5" r="2" fill="currentColor"/>
+            <path d="M18.5 7.5V10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <ellipse cx="12" cy="13" rx="7" ry="5" fill="currentColor"/>
+            <circle cx="9.5" cy="12" r="1" fill="#f7f6f2"/>
+            <circle cx="14.5" cy="12" r="1" fill="#f7f6f2"/>
+            <path d="M9 15c1.8 1.1 4.2 1.1 6 0" fill="none" stroke="#f7f6f2" stroke-width="1" stroke-linecap="round"/>
+          </svg>
+        </a>
         <a href="https://wa.me/628175404449" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Business">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2a9.9 9.9 0 0 0-8.47 15.03L2 22l5.1-1.53A9.9 9.9 0 1 0 12.04 2m0 1.9a8 8 0 0 1 0 16 7.9 7.9 0 0 1-4.1-1.14l-.3-.18-3.02.9.92-2.94-.2-.32A8 8 0 0 1 12.04 3.9m-3.4 3.4c-.2 0-.52.07-.8.38-.27.3-1.05 1.03-1.05 2.5s1.08 2.9 1.23 3.1c.15.2 2.09 3.34 5.16 4.55 2.55 1 3.07.8 3.63.75.55-.05 1.78-.73 2.03-1.43.25-.7.25-1.3.17-1.43-.08-.13-.28-.2-.6-.36-.3-.15-1.78-.88-2.05-.98-.28-.1-.48-.15-.68.15-.2.3-.78.98-.95 1.18-.17.2-.35.22-.65.07-.3-.15-1.28-.47-2.44-1.5-.9-.8-1.5-1.8-1.68-2.1-.18-.3-.02-.47.13-.62.13-.13.3-.35.45-.53.15-.17.2-.3.3-.5.1-.2.05-.38-.03-.53-.07-.15-.67-1.62-.92-2.22-.24-.57-.49-.5-.67-.5z"/></svg>
         </a>
