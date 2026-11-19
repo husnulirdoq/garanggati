@@ -77,6 +77,39 @@ kbd { padding: 2px 5px; border: 1px solid #e6e4dc; border-radius: 3px; color: #9
 .read-link span { transition: transform .16s; }
 .read-link:hover span { transform: translateX(3px); }
 .no-results { padding: 55px 0; color: var(--muted); text-align: center; font-size: 12px; }
+.guestbook-section { max-width: 1080px; margin: 0 auto; padding: 68px 20px 82px; border-top: 1px solid var(--line); scroll-margin-top: 85px; }
+.guestbook-heading { display: flex; align-items: end; justify-content: space-between; gap: 20px; }
+.guestbook-heading .eyebrow { margin-bottom: 9px; }
+.guestbook-heading h2 { margin: 0; font: 600 30px "Segoe UI", sans-serif; letter-spacing: -1.2px; }
+.guestbook-heading > p { max-width: 310px; margin: 0 0 3px; color: #85867f; font-size: 11px; line-height: 1.7; }
+.guestbook-layout { display: grid; grid-template-columns: minmax(280px, .85fr) minmax(320px, 1.15fr); gap: 18px; margin-top: 24px; }
+.guestbook-form, .guestbook-messages { border: 1px solid #ebe9e2; border-radius: 8px; background: var(--surface); }
+.guestbook-form { display: grid; align-content: start; padding: 21px; }
+.guestbook-form label { margin: 0 0 7px; color: #55574f; font-size: 11px; font-weight: 600; }
+.guestbook-form label:not(:first-child) { margin-top: 14px; }
+.guestbook-form input, .guestbook-form textarea { width: 100%; border: 1px solid #e2e0d8; border-radius: 6px; outline: none; background: #fcfbf7; color: var(--ink); font: 12px/1.6 "DM Sans", "Segoe UI", sans-serif; }
+.guestbook-form input { min-height: 42px; padding: 9px 11px; }
+.guestbook-form textarea { min-height: 112px; resize: vertical; padding: 10px 11px; }
+.guestbook-form input:focus, .guestbook-form textarea:focus { border-color: #9eaf96; box-shadow: 0 0 0 3px rgb(120 151 110 / 12%); }
+.guestbook-form-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 10px; }
+.guestbook-form-footer span { color: #9a9b92; font-size: 9px; }
+.guestbook-submit { min-height: 38px; padding: 0 13px; border: 1px solid var(--green); border-radius: 5px; background: var(--green); color: white; cursor: pointer; font-size: 10px; font-weight: 600; }
+.guestbook-submit:hover { border-color: var(--green-dark); background: var(--green-dark); }
+.guestbook-submit:disabled { cursor: wait; opacity: .65; }
+.guestbook-status { min-height: 16px; margin: 10px 0 0; color: #806541; font-size: 10px; }
+.guestbook-status.success { color: var(--green-dark); }
+.guestbook-status.error { color: #9b5d50; }
+.guestbook-messages { min-height: 260px; padding: 20px; }
+.guestbook-messages-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+.guestbook-messages-heading h3 { margin: 0; font: 600 15px "Segoe UI", sans-serif; }
+.guestbook-messages-heading span { color: #9a9b92; font-size: 9px; }
+.guestbook-list { display: grid; gap: 11px; padding-top: 13px; }
+.guestbook-entry { padding: 12px 13px; border-radius: 6px; background: #f8f7f2; }
+.guestbook-entry-header { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.guestbook-entry strong { color: #55574f; font-size: 11px; }
+.guestbook-entry time { color: #a1a198; font-size: 8px; }
+.guestbook-entry p { margin: 7px 0 0; color: #777970; font-size: 11px; line-height: 1.65; overflow-wrap: anywhere; white-space: pre-wrap; }
+.guestbook-empty { margin: 32px 0; color: #a0a097; font-size: 11px; text-align: center; }
 .site-footer { display: flex; min-height: 79px; align-items: center; justify-content: space-between; gap: 15px; padding: 18px max(7vw, calc((100vw - 1180px) / 2)); border-top: 1px solid var(--line); color: #999a91; font-size: 9px; }
 .footer-brand { color: #55574f; text-decoration: none; font: 800 17px "Segoe UI", sans-serif; letter-spacing: -1px; }
 .site-footer > a:last-child { color: #77866e; text-decoration: none; }
@@ -168,10 +201,10 @@ kbd { padding: 2px 5px; border: 1px solid #e6e4dc; border-radius: 3px; color: #9
 .login-panel { margin: 0; padding: 37px; border: 0; border-radius: 0; box-shadow: none; }
 .admin-panel form { display: grid; }
 .admin-panel form > label:not(.publish-toggle) { margin: 16px 0 7px; color: #55574f; font-size: 11px; font-weight: 600; }
-.admin-panel input:not([type="checkbox"]), .admin-panel textarea { width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid #e2e0d8; border-radius: 6px; outline: none; background: #fcfbf7; color: var(--ink); font: 12px "DM Sans", "Segoe UI", sans-serif; transition: border-color .16s, box-shadow .16s; }
+.admin-panel input:not([type="checkbox"]), .admin-panel textarea, .admin-panel select { width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid #e2e0d8; border-radius: 6px; outline: none; background: #fcfbf7; color: var(--ink); font: 12px "DM Sans", "Segoe UI", sans-serif; transition: border-color .16s, box-shadow .16s; }
 .admin-panel textarea { resize: vertical; line-height: 1.7; }
-.admin-panel input:focus, .admin-panel textarea:focus { border-color: #9eaf96; box-shadow: 0 0 0 3px rgb(120 151 110 / 12%); }
-.admin-panel input:focus-visible, .admin-panel textarea:focus-visible, .admin-panel button:focus-visible, .site-nav a:focus-visible, .site-header a:focus-visible { outline: 3px solid rgb(88 116 86 / 30%); outline-offset: 2px; }
+.admin-panel input:focus, .admin-panel textarea:focus, .admin-panel select:focus { border-color: #9eaf96; box-shadow: 0 0 0 3px rgb(120 151 110 / 12%); }
+.admin-panel input:focus-visible, .admin-panel textarea:focus-visible, .admin-panel select:focus-visible, .admin-panel button:focus-visible, .site-nav a:focus-visible, .site-header a:focus-visible { outline: 3px solid rgb(88 116 86 / 30%); outline-offset: 2px; }
 .admin-panel input[readonly] { background: #f0efe9; color: #85867e; }
 .admin-panel input:disabled, .admin-panel button:disabled { cursor: not-allowed; opacity: .6; }
 .login-actions { display: grid; align-items: center; gap: 12px; margin-top: 20px; }
@@ -192,20 +225,18 @@ kbd { padding: 2px 5px; border: 1px solid #e6e4dc; border-radius: 3px; color: #9
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
 .form-row > div { min-width: 0; }
 .field-heading { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; }
-.field-heading label { color: #55574f; font-size: 11px; font-weight: 600; }
+.field-heading label, .field-heading #post-body-label { color: #55574f; font-size: 11px; font-weight: 600; }
 .field-heading #body-count { color: #999a91; font-size: 10px; }
-.editor-tabs { display: flex; gap: 4px; margin-top: 8px; padding: 4px; border-radius: 7px; background: #f0efe9; }
-.editor-tab { min-height: 36px; flex: 1; border: 0; border-radius: 5px; background: transparent; color: #777970; cursor: pointer; font-size: 10px; }
-.editor-tab.active { background: var(--surface); color: var(--green-dark); font-weight: 600; box-shadow: 0 1px 4px rgb(39 42 38 / 8%); }
-#post-body { min-height: 300px; margin-top: 8px; font: 12px/1.75 ui-monospace, SFMono-Regular, Consolas, monospace; }
-.markdown-preview { min-height: 300px; margin-top: 8px; padding: 18px; border: 1px solid #e2e0d8; border-radius: 6px; background: #fffefa; color: #50534c; font: 13px/1.8 Georgia, serif; overflow-wrap: anywhere; }
-.markdown-preview:empty::before { color: #999a91; content: "Pratinjau tulisan akan muncul di sini."; font-style: italic; }
-.markdown-preview h1, .markdown-preview h2, .markdown-preview h3 { color: var(--ink); font-family: "Segoe UI", sans-serif; line-height: 1.35; }
-.markdown-preview h1 { font-size: 23px; }.markdown-preview h2 { font-size: 19px; }.markdown-preview h3 { font-size: 16px; }
-.markdown-preview a { color: var(--green-dark); }
-.markdown-preview blockquote { margin-left: 0; padding-left: 13px; border-left: 3px solid #b9c4b1; color: #777970; }
-.markdown-preview pre { overflow-x: auto; padding: 12px; border-radius: 5px; background: #efeee8; }
-.markdown-preview code { font: .9em ui-monospace, monospace; }
+.editor-toolbar { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; padding: 7px; border: 1px solid #ebe9e2; border-radius: 6px 6px 0 0; background: #f6f5f0; }
+.editor-toolbar button { min-height: 34px; padding: 0 10px; border: 1px solid #e2e0d8; border-radius: 5px; background: #fffefa; color: #62645c; cursor: pointer; font: 10px "DM Sans", "Segoe UI", sans-serif; }
+.editor-toolbar button:hover { border-color: #bdc8b7; color: var(--green-dark); }
+.rich-text-editor { min-height: 300px; padding: 16px; border: 1px solid #e2e0d8; border-radius: 0 0 6px 6px; outline: none; background: #fffefa; color: #50534c; font: 13px/1.8 Georgia, serif; overflow-wrap: anywhere; }
+.rich-text-editor:empty::before { color: #999a91; content: "Tulis artikel di sini…"; font-style: italic; pointer-events: none; }
+.rich-text-editor:focus { border-color: #9eaf96; box-shadow: 0 0 0 3px rgb(120 151 110 / 12%); }
+.rich-text-editor h2, .rich-text-editor h3 { color: var(--ink); font-family: "Segoe UI", sans-serif; line-height: 1.35; }
+.rich-text-editor h2 { font-size: 21px; }.rich-text-editor h3 { font-size: 17px; }
+.rich-text-editor a { color: var(--green-dark); }
+.rich-text-editor blockquote { margin-left: 0; padding-left: 13px; border-left: 3px solid #b9c4b1; color: #777970; }
 .editor-status { min-height: 16px; margin: 9px 0 0; color: #85867e; font-size: 10px; }
 .editor-status[data-dirty="true"] { color: #98744e; }
 .editor-status[data-saved="true"] { color: var(--green-dark); }
@@ -257,6 +288,12 @@ kbd { padding: 2px 5px; border: 1px solid #e6e4dc; border-radius: 3px; color: #9
   .filter-chip { flex: 0 0 auto; }
   .posts-grid { grid-template-columns: 1fr; gap: 11px; }
   .post-card { min-height: 190px; padding: 17px; }
+  .guestbook-section { padding: 48px 19px 58px; }
+  .guestbook-heading { align-items: stretch; flex-direction: column; gap: 8px; }
+  .guestbook-heading h2 { font-size: 25px; }
+  .guestbook-heading > p { max-width: none; }
+  .guestbook-layout { grid-template-columns: 1fr; }
+  .guestbook-form, .guestbook-messages { padding: 17px; }
   .site-footer { flex-wrap: wrap; justify-content: center; padding: 19px; text-align: center; }
   .site-footer > span { flex-basis: calc(100% - 60px); text-align: left; }
   .footer-socials { flex-basis: 100%; justify-content: flex-end; gap: 8px; }

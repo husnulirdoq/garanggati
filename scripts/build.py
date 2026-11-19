@@ -212,6 +212,7 @@ def shell(title, description, body, canonical, extra_head="", og_type="website")
       </a>
       <nav class="site-nav" aria-label="Navigasi utama">
         <a href="/#tulisan">Tulisan</a>
+        <a href="/#buku-tamu">Buku tamu</a>
         <a href="/shop/">Shop</a>
         <a href="/#topik">Topik</a>
         <a class="admin-login-link" href="/admin/">Login admin</a>
@@ -270,6 +271,37 @@ def build_home(posts):
           {cards}
         </div>
         <p class="no-results" id="no-results" hidden>Tidak ada tulisan yang cocok. Coba kata kunci atau topik lain.</p>
+      </section>
+      <section class="guestbook-section" id="buku-tamu" aria-labelledby="guestbook-heading">
+        <div class="guestbook-heading">
+          <div>
+            <p class="eyebrow">BUKU TAMU</p>
+            <h2 id="guestbook-heading">Tinggalkan jejak<span class="brand-period">.</span></h2>
+          </div>
+          <p>Sampaikan salam, pemikiran, atau pengalaman singkatmu.</p>
+        </div>
+        <div class="guestbook-layout">
+          <form class="guestbook-form" id="guestbook-form">
+            <label for="guestbook-name">Nama</label>
+            <input id="guestbook-name" name="name" type="text" maxlength="50" autocomplete="name" placeholder="Nama atau nama panggilan" required>
+            <label for="guestbook-message">Pesan</label>
+            <textarea id="guestbook-message" name="message" rows="5" maxlength="500" placeholder="Tulis pesan singkat..." required></textarea>
+            <div class="guestbook-form-footer">
+              <span id="guestbook-count">0/500</span>
+              <button class="guestbook-submit" type="submit">Kirim pesan</button>
+            </div>
+            <p class="guestbook-status" id="guestbook-status" role="status" aria-live="polite"></p>
+          </form>
+          <div class="guestbook-messages">
+            <div class="guestbook-messages-heading">
+              <h3>Pesan terbaru</h3>
+              <span id="guestbook-total">Memuat...</span>
+            </div>
+            <div id="guestbook-list" class="guestbook-list">
+              <p class="guestbook-empty">Pesan pembaca akan muncul di sini.</p>
+            </div>
+          </div>
+        </div>
       </section>
     </main>
     """

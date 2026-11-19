@@ -35,15 +35,19 @@ Iklan Adsterra sedang dimatikan karena trafik masih rendah dan iklan yang sebelu
 
 ## Menulis artikel
 
-Buka `/admin/`, masuk, lalu buat atau edit tulisan. Slug menjadi alamat artikel dan tidak dapat diubah sesudah dibuat. Centang **Terbitkan tulisan** agar artikel terlihat di blog. Isi artikel mendukung Markdown.
+Buka `/admin/`, masuk, lalu buat atau edit tulisan. Alamat artikel dibuat otomatis dari judul. Pilih salah satu topik yang tersedia dan tulis langsung di editor visual; tombol pemformatan tersedia jika diperlukan. Centang **Terbitkan tulisan** agar artikel terlihat di blog.
 
-Artikel awal dalam `content/posts/` dipakai untuk tampilan statis sebelum Firebase dikonfigurasi dan sebagai sumber impor pertama. Setelah tulisan diimpor, Firestore menjadi sumber utama untuk blog dan panel admin.
+Artikel terbit dalam `content/posts/` ditampilkan bersama artikel terbit dari Firestore. Jika slug sama, versi Firestore yang digunakan. Gunakan tombol impor di admin untuk menambahkan artikel Codespaces yang belum ada; artikel yang sudah ada tidak ditimpa.
 
 Karena GitHub Pages tidak menjalankan server, isi Firestore dimuat oleh browser. Halaman publik tetap bisa dibaca tanpa login, tetapi artikel dinamis tidak dipra-render saat build; SEO, sitemap artikel, feed RSS, dan pratinjau tautan sosial belum sekuat CMS yang menghasilkan halaman statis per artikel. Jangan simpan artikel rahasia di Firestore; pengunjung dapat membaca semua dokumen yang berstatus terbit.
 
 ## Shop
 
 Halaman `/shop/` berisi kartu menuju toko Garanggati di Shopee, TikTok Shop, Blibli, dan Lazada. Kartu saat ini membuka halaman toko masing-masing; untuk menampilkan embed produk individual, gunakan tautan produk yang spesifik.
+
+## Buku tamu
+
+Bagian buku tamu di halaman utama memungkinkan pengunjung mengirim nama dan pesan singkat. Pesan disimpan di koleksi Firestore `guestbook` dan ditampilkan secara real-time, dengan batas 50 karakter untuk nama dan 500 karakter untuk pesan. Pengunjung hanya dapat membaca dan menambahkan pesan; UID admin tetap menjadi satu-satunya akun yang dapat mengubah atau menghapus entri melalui aturan Firestore.
 
 ## Pengembangan lokal
 

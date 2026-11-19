@@ -48,17 +48,23 @@ class BlogBuildTests(unittest.TestCase):
             self.assertIn('<span class="brand-mark" aria-hidden="true">✳</span>', home)
             self.assertIn("<span>Garanggati</span>", home)
             self.assertIn('<a class="footer-brand" href="/">Garanggati</a>', home)
+            self.assertIn('id="buku-tamu"', home)
+            self.assertIn('id="guestbook-form"', home)
+            self.assertIn('id="guestbook-name"', home)
+            self.assertIn('id="guestbook-message"', home)
+            self.assertIn('id="guestbook-list"', home)
             self.assertNotIn("Catatan baru", home)
             for social_url in (
                 "https://x.com/husnulirdoq",
                 "https://www.facebook.com/husnulirdoq",
                 "https://www.instagram.com/husnulirdoq/",
+                "https://www.reddit.com/user/husnulirdoq/",
                 "https://wa.me/628175404449",
                 "https://www.youtube.com/@husnulirdoq",
                 "https://www.linkedin.com/in/husnul-aqib-st-85002454/",
             ):
                 self.assertIn(social_url, home)
-            for social_label in ("X", "Facebook", "Instagram", "WhatsApp Business", "YouTube", "LinkedIn"):
+            for social_label in ("X", "Facebook", "Instagram", "Reddit", "WhatsApp Business", "YouTube", "LinkedIn"):
                 self.assertIn(f'aria-label="{social_label}"', home)
             self.assertIn('href="mailto:info@garanggati.web.id"', home)
             self.assertIn(">info@garanggati.web.id</a>", home)
@@ -81,14 +87,37 @@ class BlogBuildTests(unittest.TestCase):
             self.assertTrue(admin_page.is_file())
             admin_html = admin_page.read_text(encoding="utf-8")
             self.assertNotIn("G-9XYG7QZPFV", admin_html)
+            self.assertIn("Masuk admin", admin_html)
             self.assertIn('aria-label="Garanggati, halaman utama"', admin_html)
             self.assertIn('<span class="brand-mark" aria-hidden="true">✳</span>', admin_html)
             self.assertIn('<a class="footer-brand" href="/">Garanggati</a>', admin_html)
-            self.assertIn("Masuk admin", admin_html)
             self.assertIn("Firebase Authentication", admin_html)
-            self.assertIn("Pratinjau", admin_html)
+            self.assertIn('role="toolbar" aria-label="Pemformatan artikel"', admin_html)
+            self.assertIn('contenteditable="true"', admin_html)
+            self.assertNotIn("Tulis Markdown", admin_html)
+            self.assertIn("Ringkasan ini tampil di kartu artikel sebelum dibuka.", admin_html)
+            self.assertIn("Impor tulisan dari Codespaces", admin_html)
+            self.assertIn("Tulisan di Firestore tidak ditimpa.", admin_html)
+            self.assertNotIn('id="post-slug"', admin_html)
+            self.assertIn('<select id="post-category" required>', admin_html)
+            self.assertIn('<option value="Filsafat">Filsafat</option>', admin_html)
+            shop_page = output_directory / "shop/index.html"
+            self.assertTrue(shop_page.is_file())
+            shop_html = shop_page.read_text(encoding="utf-8")
+            self.assertIn("Lihat toko di Shopee", shop_html)
+            self.assertIn("https://shopee.co.id/garanggatishop#product_list", shop_html)
+            self.assertIn("Lihat toko di TikTok", shop_html)
+            self.assertIn("https://vt.tiktok.com/ZSpbfegqy/", shop_html)
+            self.assertIn("Lihat toko di Blibli", shop_html)
+            self.assertIn("https://blibli.onelink.me/GNtk/hav3xy4g", shop_html)
+            self.assertIn("Lihat toko di Lazada", shop_html)
+            self.assertIn("https://www.lazada.co.id/shop/garanggati-shop/", shop_html)
             sitemap = ET.parse(output_directory / "sitemap.xml")
-            self.assertEqual(len(sitemap.findall(".//{*}loc")), 1)
+            locations = {element.text for element in sitemap.findall(".//{*}loc")}
+            self.assertEqual(
+                locations,
+                {"https://garanggati.web.id/", "https://garanggati.web.id/shop/"},
+            )
 
     def test_markdown_content_is_sanitized(self):
         result = build.render_markdown(

@@ -3,7 +3,7 @@ service cloud.firestore {
   match /databases/{database}/documents {
     function isAdmin() {
       return request.auth != null &&
-        request.auth.uid == "mB66CRd6bCRNyORtKlxklGLS6Zh2D";
+        request.auth.uid == "mB66CRd6bCRNyORtKlxklGLS6Zh2";
     }
 
     function validPost(postId) {
@@ -24,9 +24,29 @@ service cloud.firestore {
         data.updatedAt is timestamp;
     }
 
+    function validGuestbookEntry() {
+      let data = request.resource.data;
+      return data.keys().hasAll(["name", "message", "createdAt"]) &&
+        data.keys().hasOnly(["name", "message", "createdAt"]) &&
+        data.name is string &&
+        data.name.size() > 0 &&
+        data.name.size() <= 50 &&
+        data.message is string &&
+        data.message.size() > 0 &&
+        data.message.size() <= 500 &&
+        data.createdAt is timestamp;
+    }
+
     match /posts/{postId} {
       allow read: if isAdmin() || resource.data.published == true;
       allow create, update: if isAdmin() && validPost(postId);
+      allow delete: if isAdmin();
+    }
+
+    match /guestbook/{entryId} {
+      allow read: if true;
+      allow create: if validGuestbookEntry();
+      allow update: if isAdmin();
       allow delete: if isAdmin();
     }
   }

@@ -1,6 +1,16 @@
 import DOMPurify from "dompurify";
 import { marked } from "marked";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+  serverTimestamp,
+  where,
+} from "firebase/firestore";
 import { db, firebaseConfigured } from "./firebase-client.js";
 
 const searchInput = document.querySelector("#search-input");
@@ -295,8 +305,15 @@ async function loadPosts() {
       collection(db, "posts"),
       where("published", "==", true),
     ));
-    renderCards(snapshot.docs.map((entry) => ({ id: entry.id, ...entry.data() }))
-      .sort((a, b) => b.date.localeCompare(a.date)));
+    const firestorePosts = snapshot.docs.map((entry) => ({ id: entry.id, ...entry.data() }))
+      .sort((a, b) => b.date.localeCompare(a.date));
+    const seedPosts = await loadSeedPosts();
+    const mergedPosts = new Map(seedPosts.map((post) => [post.slug, post]));
+    for (const post of firestorePosts) mergedPosts.set(post.slug, post);
+    renderCards([...mergedPosts.values()].sort((a, b) => b.date.localeCompare(a.date)));
+    if (!firestorePosts.length && seedPosts.length) {
+      showStatus("Firestore belum memiliki tulisan terbit. Menampilkan tulisan dari Codespaces.");
+    }
   } catch (error) {
     console.error("Artikel publik gagal dimuat dari Firestore.", error);
     showStatus("Tulisan terbaru belum dapat dimuat. Coba muat ulang halaman.");
@@ -304,6 +321,122 @@ async function loadPosts() {
     return;
   }
 }
+
+function formatGuestbookDate(value) {
+  const date = value?.toDate ? value.toDate() : new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return new Intl.DateTimeFormat("id-ID", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  }).format(date);
+}
+
+function renderGuestbookEntries(entries) {
+  const list = document.querySelector("#guestbook-list");
+  const total = document.querySelector("#guestbook-total");
+  if (!list) return;
+
+  if (total) total.textContent = `${entries.length} pesan`;
+  if (!entries.length) {
+    const empty = document.createElement("p");
+    empty.className = "guestbook-empty";
+    empty.textContent = "Belum ada pesan. Jadilah yang pertama.";
+    list.replaceChildren(empty);
+    return;
+  }
+
+  list.replaceChildren(...entries.map((entry) => {
+    const item = document.createElement("article");
+    item.className = "guestbook-entry";
+    const header = document.createElement("div");
+    header.className = "guestbook-entry-header";
+    const name = document.createElement("strong");
+    name.textContent = entry.name;
+    const date = document.createElement("time");
+    if (entry.createdAt?.toDate) date.dateTime = entry.createdAt.toDate().toISOString();
+    date.textContent = formatGuestbookDate(entry.createdAt);
+    header.append(name, date);
+    const message = document.createElement("p");
+    message.textContent = entry.message;
+    item.append(header, message);
+    return item;
+  }));
+}
+
+function setGuestbookStatus(message, type = "") {
+  const status = document.querySelector("#guestbook-status");
+  if (!status) return;
+  status.textContent = message;
+  status.className = `guestbook-status ${type}`.trim();
+}
+
+function loadGuestbook() {
+  if (!firebaseConfigured || !db) {
+    setGuestbookStatus("Buku tamu sedang tidak terhubung.");
+    return;
+  }
+
+  const guestbookQuery = query(
+    collection(db, "guestbook"),
+    orderBy("createdAt", "desc"),
+    limit(30),
+  );
+  onSnapshot(guestbookQuery, (snapshot) => {
+    const entries = snapshot.docs.map((entry) => ({ id: entry.id, ...entry.data() }));
+    renderGuestbookEntries(entries);
+  }, (error) => {
+    console.error("Buku tamu gagal dimuat.", error);
+    setGuestbookStatus("Pesan terbaru belum dapat dimuat.", "error");
+  });
+}
+
+const guestbookForm = document.querySelector("#guestbook-form");
+const guestbookMessage = document.querySelector("#guestbook-message");
+const guestbookCount = document.querySelector("#guestbook-count");
+
+guestbookMessage?.addEventListener("input", () => {
+  if (guestbookCount) guestbookCount.textContent = `${guestbookMessage.value.length}/500`;
+});
+
+guestbookForm?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  if (!firebaseConfigured || !db) {
+    setGuestbookStatus("Buku tamu belum terhubung dengan Firestore.", "error");
+    return;
+  }
+
+  const formData = new FormData(guestbookForm);
+  const name = String(formData.get("name") ?? "").trim();
+  const message = String(formData.get("message") ?? "").trim();
+  if (!name || !message) {
+    setGuestbookStatus("Nama dan pesan wajib diisi.", "error");
+    return;
+  }
+  if (name.length > 50 || message.length > 500) {
+    setGuestbookStatus("Nama maksimal 50 karakter dan pesan maksimal 500 karakter.", "error");
+    return;
+  }
+
+  const submitButton = guestbookForm.querySelector(".guestbook-submit");
+  submitButton.disabled = true;
+  setGuestbookStatus("Mengirim pesan...");
+  try {
+    await addDoc(collection(db, "guestbook"), {
+      name,
+      message,
+      createdAt: serverTimestamp(),
+    });
+    guestbookForm.reset();
+    if (guestbookCount) guestbookCount.textContent = "0/500";
+    setGuestbookStatus("Pesan berhasil ditambahkan. Terima kasih!", "success");
+  } catch (error) {
+    console.error("Pesan buku tamu gagal dikirim.", error);
+    setGuestbookStatus("Pesan gagal dikirim. Coba lagi sebentar.", "error");
+  } finally {
+    submitButton.disabled = false;
+  }
+});
 
 document.querySelector("#topik")?.addEventListener("click", (event) => {
   const filter = event.target.closest(".filter-chip");
@@ -327,6 +460,7 @@ document.addEventListener("keydown", (event) => {
 });
 
 filterPosts();
+loadGuestbook();
 
 const initialPathSlug = location.pathname.match(/^\/posts\/([^/]+)\/?$/)?.[1];
 if (new URLSearchParams(location.search).has("post") || initialPathSlug) {
