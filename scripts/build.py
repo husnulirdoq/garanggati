@@ -202,7 +202,6 @@ def shell(title, description, body, canonical, extra_head="", og_type="website")
       gtag('js', new Date());
       gtag('config', '{GA4_MEASUREMENT_ID}');
     </script>
-    <script data-cfasync="false" src="https://bauval.org/14/9b73518a5de06947bc87c0ae7e45ff33"></script>
     {extra_head}
   </head>
   <body>
@@ -312,22 +311,6 @@ def build_post(post, recent_posts):
           <p>Terima kasih sudah membaca.</p>
           <a href="/">← Kembali ke semua tulisan</a>
         </footer>
-        <div class="adsterra-native" aria-label="Iklan">
-          <script async="async" data-cfasync="false" src="https://bauval.org/21/bcd0994ba7b2adca7a89e0b70b99810f"></script>
-          <div id="container-bcd0994ba7b2adca7a89e0b70b99810f"></div>
-        </div>
-        <div class="adsterra-banner" aria-label="Iklan">
-          <script>
-            atOptions = {{
-              'key': '23454fdc2eb78bb94b9ac2f1d0d6b4d3',
-              'format': 'iframe',
-              'height': 60,
-              'width': 468,
-              'params': {{}}
-            }};
-          </script>
-          <script src="https://bauval.org/22/23454fdc2eb78bb94b9ac2f1d0d6b4d3"></script>
-        </div>
       </article>
       <aside class="article-aside">
         <p class="eyebrow">LANJUTKAN MEMBACA</p>

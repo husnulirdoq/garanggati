@@ -29,6 +29,10 @@ Setelah situs diterbitkan, uji kunjungan dengan laporan **Realtime** di GA4. Kli
 
 Tautan dari tombol share membawa `utm_source=article_share`, `utm_medium=social`, dan `utm_campaign=article_share`; laporan kampanye dapat membedakan kunjungan dari tautan share. Event `article_share_click` mengukur klik/percobaan berbagi, bukan memastikan tautannya benar-benar dikirim. Tombol share bawaan perangkat tidak memberi tahu platform tujuan. Pengiriman data bergantung pada izin browser, koneksi jaringan, dan pemblokir pelacak.
 
+## Adsterra
+
+Iklan Adsterra sedang dimatikan karena trafik masih rendah dan iklan yang sebelumnya tampil dirasa meragukan. Script serta unit iklan tidak lagi dimuat pada halaman publik. Tinjau kembali jaringan dan format iklan sebelum mengaktifkannya lagi.
+
 ## Menulis artikel
 
 Buka `/admin/`, masuk, lalu buat atau edit tulisan. Slug menjadi alamat artikel dan tidak dapat diubah sesudah dibuat. Centang **Terbitkan tulisan** agar artikel terlihat di blog. Isi artikel mendukung Markdown.

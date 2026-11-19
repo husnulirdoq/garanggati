@@ -39,6 +39,7 @@ class BlogBuildTests(unittest.TestCase):
             home = (output_directory / "index.html").read_text(encoding="utf-8")
             self.assertIn("G-9XYG7QZPFV", home)
             self.assertIn("https://www.googletagmanager.com/gtag/js?id=G-9XYG7QZPFV", home)
+            self.assertNotIn("bauval.org", home)
             self.assertIn("Tulisan publik", home)
             self.assertNotIn("Tulisan draf", home)
             self.assertIn("Baca tulisan", home)
@@ -72,6 +73,8 @@ class BlogBuildTests(unittest.TestCase):
                 article_html,
             )
             self.assertIn('data-share-status role="status" aria-live="polite"', article_html)
+            self.assertNotIn("bauval.org", article_html)
+            self.assertNotIn("adsterra", article_html)
             posts = json.loads((output_directory / "posts.json").read_text(encoding="utf-8"))
             self.assertEqual([post["slug"] for post in posts], ["public-post"])
             admin_page = output_directory / "admin/index.html"
