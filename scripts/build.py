@@ -173,6 +173,9 @@ def social_links():
         <a href="https://www.linkedin.com/in/husnul-aqib-st-85002454/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 2H3.55C2.69 2 2 2.68 2 3.53v16.94c0 .85.69 1.53 1.55 1.53h16.9c.86 0 1.55-.68 1.55-1.53V3.53c0-.85-.69-1.53-1.55-1.53M7.93 18.9H4.98V9.4h2.95zM6.45 8.1a1.71 1.71 0 1 1 0-3.42 1.71 1.71 0 0 1 0 3.42M19 18.9h-2.94v-4.62c0-1.1-.02-2.52-1.54-2.52-1.55 0-1.79 1.2-1.79 2.44v4.7H9.8V9.4h2.82v1.3h.04c.39-.74 1.35-1.52 2.77-1.52 2.97 0 3.52 1.95 3.52 4.48z"/></svg>
         </a>
+        <a href="https://t.me/husnulirdoq" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.94 2.48a1.1 1.1 0 0 0-1.13-.18L2.56 9.62a1.06 1.06 0 0 0 .08 2l4.7 1.48 1.82 5.58a1.1 1.1 0 0 0 1.03.74h.04a1.1 1.1 0 0 0 1-.64l1.88-3.55 4.62 3.4a1.1 1.1 0 0 0 1.73-.72l2.62-14.15a1.1 1.1 0 0 0-.14-.28M8.75 12.38l-4.02-1.27 14.1-5.78-10.08 7.05m2.24 4.88-1.08-3.29 2.15 1.58z"/></svg>
+        </a>
       </nav>
     """
 

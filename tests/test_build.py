@@ -62,9 +62,10 @@ class BlogBuildTests(unittest.TestCase):
                 "https://wa.me/628175404449",
                 "https://www.youtube.com/@husnulirdoq",
                 "https://www.linkedin.com/in/husnul-aqib-st-85002454/",
+                "https://t.me/husnulirdoq",
             ):
                 self.assertIn(social_url, home)
-            for social_label in ("X", "Facebook", "Instagram", "Reddit", "WhatsApp Business", "YouTube", "LinkedIn"):
+            for social_label in ("X", "Facebook", "Instagram", "Reddit", "WhatsApp Business", "YouTube", "LinkedIn", "Telegram"):
                 self.assertIn(f'aria-label="{social_label}"', home)
             self.assertIn('href="mailto:info@garanggati.web.id"', home)
             self.assertIn(">info@garanggati.web.id</a>", home)
