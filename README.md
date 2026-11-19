@@ -39,7 +39,7 @@ Buka `/admin/`, masuk, lalu buat atau edit tulisan. Alamat artikel dibuat otomat
 
 Artikel terbit dalam `content/posts/` ditampilkan bersama artikel terbit dari Firestore. Jika slug sama, versi Firestore yang digunakan. Gunakan tombol impor di admin untuk menambahkan artikel Codespaces yang belum ada; artikel yang sudah ada tidak ditimpa.
 
-Karena GitHub Pages tidak menjalankan server, isi Firestore dimuat oleh browser. Halaman publik tetap bisa dibaca tanpa login, tetapi artikel dinamis tidak dipra-render saat build; SEO, sitemap artikel, feed RSS, dan pratinjau tautan sosial belum sekuat CMS yang menghasilkan halaman statis per artikel. Jangan simpan artikel rahasia di Firestore; pengunjung dapat membaca semua dokumen yang berstatus terbit.
+Karena GitHub Pages tidak menjalankan server, isi Firestore dimuat oleh browser. Artikel di `content/posts/` dibuat sebagai halaman statis dengan URL kanonis per artikel, metadata, data terstruktur, dan entri sitemap. Artikel yang hanya ada di Firestore tetap dirender di browser dan belum otomatis masuk sitemap sampai tersedia di `content/posts/`. Feed RSS belum tersedia. Jangan simpan artikel rahasia di Firestore; pengunjung dapat membaca semua dokumen yang berstatus terbit.
 
 ## Shop
 
@@ -65,4 +65,4 @@ Buka `http://localhost:8000`. Untuk login lokal, tambahkan `localhost` ke Author
 
 ## Publikasi
 
-Workflow `.github/workflows/pages.yml` membangun situs dan menerbitkan `_site` ke GitHub Pages pada setiap push ke `main`. Domain `garanggati.web.id` dan sitemap halaman utama (`/sitemap.xml`) sudah dikonfigurasi.
+Workflow `.github/workflows/pages.yml` membangun situs dan menerbitkan `_site` ke GitHub Pages pada setiap push ke `main`. Domain `garanggati.web.id` dan sitemap halaman publik serta artikel Markdown (`/sitemap.xml`) sudah dikonfigurasi.

@@ -44,7 +44,7 @@ function categoryClass(category) {
 }
 
 function postLink(slug) {
-  return `/?post=${encodeURIComponent(slug)}`;
+  return `/posts/${encodeURIComponent(slug)}/`;
 }
 
 function postShareLink(slug) {
@@ -248,10 +248,13 @@ function renderArticle(post) {
   document.title = `${post.title} — Ruang`;
   const canonical = `https://garanggati.web.id${postLink(post.slug)}`;
   setMeta("description", post.excerpt);
+  setMeta("twitter:title", document.title);
+  setMeta("twitter:description", post.excerpt);
   setProperty("og:type", "article");
   setProperty("og:title", document.title);
   setProperty("og:description", post.excerpt);
   setProperty("og:url", canonical);
+  setMeta("twitter:card", "summary");
   const canonicalLink = document.querySelector('link[rel="canonical"]');
   if (canonicalLink) canonicalLink.href = canonical;
 }

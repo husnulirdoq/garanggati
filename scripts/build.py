@@ -106,7 +106,7 @@ def category_slug(category):
 
 
 def post_url(post):
-    return f"/?post={quote(post['slug'])}"
+    return f"/posts/{quote(post['slug'])}/"
 
 
 def format_date(value, include_year=True):
@@ -199,6 +199,9 @@ def shell(title, description, body, canonical, extra_head="", og_type="website")
     <meta property="og:title" content="{escape(title)}">
     <meta property="og:description" content="{escape(description)}">
     <meta property="og:url" content="{escape(canonical)}">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="{escape(title)}">
+    <meta name="twitter:description" content="{escape(description)}">
     <link rel="canonical" href="{escape(canonical)}">
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
@@ -341,7 +344,7 @@ def build_post(post, recent_posts):
           <time datetime="{post['date'].isoformat()}">{format_date(post['date'])}</time>
           <div class="article-share">
             <button class="article-share-button" type="button" data-share-article
-              data-share-url="{escape(BASE_URL + post_url(post) + '&utm_source=article_share&utm_medium=social&utm_campaign=article_share')}"
+              data-share-url="{escape(BASE_URL + post_url(post) + '?utm_source=article_share&utm_medium=social&utm_campaign=article_share')}"
               data-share-title="{escape(post['title'])}">Bagikan artikel</button>
             <span class="article-share-status" data-share-status role="status" aria-live="polite"></span>
           </div>
@@ -360,12 +363,33 @@ def build_post(post, recent_posts):
       </aside>
     </main>
     """
-    extra_head = f'<meta property="article:published_time" content="{post["date"].isoformat()}">'
+    canonical = BASE_URL + post_url(post)
+    structured_data = json.dumps(
+        {
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            "headline": post["title"],
+            "description": post["excerpt"],
+            "datePublished": post["date"].isoformat(),
+            "inLanguage": "id",
+            "articleSection": post["category"],
+            "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": canonical,
+            },
+        },
+        ensure_ascii=False,
+        separators=(",", ":"),
+    ).replace("&", "\\u0026").replace("<", "\\u003c").replace(">", "\\u003e")
+    extra_head = (
+        f'<meta property="article:published_time" content="{post["date"].isoformat()}">'
+        f'<script type="application/ld+json">{structured_data}</script>'
+    )
     return shell(
         post["title"] + " — " + SITE_NAME,
         post["excerpt"],
         body,
-        BASE_URL + post_url(post),
+        canonical,
         extra_head,
         og_type="article",
     )
@@ -515,7 +539,7 @@ def build():
     shutil.copy2(ROOT / "CNAME", OUTPUT / "CNAME")
 
     sitemap = ET.Element("urlset", {"xmlns": "http://www.sitemaps.org/schemas/sitemap/0.9"})
-    for path in ("/", "/shop/"):
+    for path in ("/", "/shop/", *(post_url(post) for post in posts)):
         url_element = ET.SubElement(sitemap, "{http://www.sitemaps.org/schemas/sitemap/0.9}url")
         ET.SubElement(url_element, "{http://www.sitemaps.org/schemas/sitemap/0.9}loc").text = BASE_URL + path
     ET.indent(sitemap, space="  ")

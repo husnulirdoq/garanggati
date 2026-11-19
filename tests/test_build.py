@@ -43,6 +43,8 @@ class BlogBuildTests(unittest.TestCase):
             self.assertIn("Tulisan publik", home)
             self.assertNotIn("Tulisan draf", home)
             self.assertIn("Baca tulisan", home)
+            self.assertIn('href="/posts/public-post/"', home)
+            self.assertNotIn('href="/?post=public-post"', home)
             self.assertIn("Login admin", home)
             self.assertIn('aria-label="Garanggati, halaman utama"', home)
             self.assertIn('<span class="brand-mark" aria-hidden="true">✳</span>', home)
@@ -76,11 +78,17 @@ class BlogBuildTests(unittest.TestCase):
             article_html = (output_directory / "posts/public-post/index.html").read_text(encoding="utf-8")
             self.assertIn('data-share-article', article_html)
             self.assertIn(
-                'data-share-url="https://garanggati.web.id/?post=public-post'
-                '&amp;utm_source=article_share&amp;utm_medium=social'
+                'data-share-url="https://garanggati.web.id/posts/public-post/'
+                '?utm_source=article_share&amp;utm_medium=social'
                 '&amp;utm_campaign=article_share"',
                 article_html,
             )
+            self.assertIn(
+                '<link rel="canonical" href="https://garanggati.web.id/posts/public-post/">',
+                article_html,
+            )
+            self.assertIn('"@type":"BlogPosting"', article_html)
+            self.assertIn('"datePublished":"2026-01-02"', article_html)
             self.assertIn('data-share-status role="status" aria-live="polite"', article_html)
             self.assertNotIn("bauval.org", article_html)
             self.assertNotIn("adsterra", article_html)
@@ -119,7 +127,11 @@ class BlogBuildTests(unittest.TestCase):
             locations = {element.text for element in sitemap.findall(".//{*}loc")}
             self.assertEqual(
                 locations,
-                {"https://garanggati.web.id/", "https://garanggati.web.id/shop/"},
+                {
+                    "https://garanggati.web.id/",
+                    "https://garanggati.web.id/shop/",
+                    "https://garanggati.web.id/posts/public-post/",
+                },
             )
 
     def test_markdown_content_is_sanitized(self):
