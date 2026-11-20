@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 POSTS_DIR = ROOT / "content" / "posts"
 OUTPUT = ROOT / "_site"
 BASE_URL = "https://garanggati.web.id"
+WELLBEING_APK_URL = "https://github.com/husnulirdoq/wellbeing-flet2/releases/download/build-35/frontend.apk"
 GA4_MEASUREMENT_ID = "G-9XYG7QZPFV"
 SITE_NAME = "Ruang"
 SITE_DESCRIPTION = "Catatan tentang filsafat, bahasa, teknologi, dan cara belajar."
@@ -205,7 +206,7 @@ def shell(title, description, body, canonical, extra_head="", og_type="website")
     <link rel="canonical" href="{escape(canonical)}">
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/styles.css?v=7">
     <title>{escape(title)}</title>
     <script async src="https://www.googletagmanager.com/gtag/js?id={GA4_MEASUREMENT_ID}"></script>
     <script>
@@ -222,7 +223,10 @@ def shell(title, description, body, canonical, extra_head="", og_type="website")
         <span class="brand-mark" aria-hidden="true">✳</span>
         <span>Garanggati</span>
       </a>
-      <nav class="site-nav" aria-label="Navigasi utama">
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-navigation" aria-label="Buka menu navigasi">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="site-nav" id="main-navigation" aria-label="Navigasi utama">
         <a href="/#tulisan">Tulisan</a>
         <a href="/#buku-tamu">Buku tamu</a>
         <a href="/shop/">Shop</a>
@@ -240,7 +244,7 @@ def shell(title, description, body, canonical, extra_head="", og_type="website")
       </div>
       <a href="/admin/">Login admin <span aria-hidden="true">↗</span></a>
     </footer>
-    <script type="module" src="/blog.js"></script>
+    <script type="module" src="/blog.js?v=7"></script>
   </body>
 </html>
 """
@@ -257,6 +261,7 @@ def build_home(posts):
         <p class="hero-copy">Tulisan tentang filsafat, bahasa, teknologi, dan cara kita belajar—dikumpulkan sambil terus berpikir.</p>
         <div class="hero-actions">
           <a class="hero-link" href="#tulisan">Baca tulisan <span aria-hidden="true">↓</span></a>
+          <a class="hero-admin-link" href="{WELLBEING_APK_URL}" target="_blank" rel="noopener noreferrer">Unduh Wellbeing Tracker <span aria-hidden="true">↗</span></a>
           <a class="hero-admin-link" href="/admin/">Login admin <span aria-hidden="true">↗</span></a>
         </div>
         <span class="hero-decoration" aria-hidden="true">✳</span>

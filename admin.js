@@ -7,9 +7,9 @@ import {
   doc,
   getDoc,
   getDocs,
+  runTransaction,
   serverTimestamp,
   setDoc,
-  writeBatch,
 } from "firebase/firestore";
 import { auth, db, firebaseConfigured } from "./firebase-client.js";
 
@@ -19,12 +19,15 @@ const workspace = document.querySelector("#admin-workspace");
 const form = document.querySelector("#post-form");
 const postList = document.querySelector("#admin-post-list");
 const listStatus = document.querySelector("#post-list-status");
-const slugInput = document.querySelector("#post-slug");
+const categorySelect = document.querySelector("#post-category");
 const bodyInput = document.querySelector("#post-body");
 const bodyCount = document.querySelector("#body-count");
-const bodyPreview = document.querySelector("#post-preview");
 const editorStatus = document.querySelector("#editor-status");
 let currentPosts = [];
+const articleTags = [
+  "a", "blockquote", "br", "code", "em", "h2", "h3", "h4", "hr", "li",
+  "ol", "p", "pre", "strong", "ul",
+];
 
 function showNotice(message, type = "error") {
   notice.textContent = message;
@@ -43,36 +46,51 @@ function slugify(value) {
     .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
+async function createUniqueSlug(title) {
+  const baseSlug = slugify(title) || "tulisan";
+  let slug = baseSlug;
+  let suffix = 2;
+  while ((await getDoc(doc(db, "posts", slug))).exists()) {
+    slug = `${baseSlug}-${suffix}`;
+    suffix += 1;
+  }
+  return slug;
+}
+
 function resetForm() {
+  categorySelect.querySelectorAll("[data-legacy-category]").forEach((option) => option.remove());
   form.reset();
+  bodyInput.replaceChildren();
   document.querySelector("#post-id").value = "";
   document.querySelector("#post-date").value = new Date().toISOString().slice(0, 10);
-  slugInput.readOnly = false;
-  delete slugInput.dataset.edited;
   document.querySelector("#editor-title").textContent = "Tulisan baru";
   document.querySelector("#delete-post-button").hidden = true;
-  updatePreview();
+  updateBodyCount();
   editorStatus.textContent = "";
   delete editorStatus.dataset.dirty;
   delete editorStatus.dataset.saved;
 }
 
-function updatePreview() {
-  bodyCount.textContent = `${bodyInput.value.length.toLocaleString("id-ID")} / 50.000`;
-  bodyPreview.innerHTML = bodyInput.value
-    ? DOMPurify.sanitize(marked.parse(bodyInput.value))
-    : "";
+function cleanArticleHtml(html) {
+  return DOMPurify.sanitize(html, {
+    ALLOWED_TAGS: articleTags,
+    ALLOWED_ATTR: ["href", "title"],
+  });
 }
 
-function selectEditorTab(tab) {
-  const writing = tab === "write";
-  document.querySelector("#write-tab").classList.toggle("active", writing);
-  document.querySelector("#write-tab").setAttribute("aria-selected", String(writing));
-  document.querySelector("#preview-tab").classList.toggle("active", !writing);
-  document.querySelector("#preview-tab").setAttribute("aria-selected", String(!writing));
-  bodyInput.hidden = !writing;
-  bodyPreview.hidden = writing;
-  if (!writing) updatePreview();
+function updateBodyCount() {
+  bodyCount.textContent = `${bodyInput.textContent.length.toLocaleString("id-ID")} / 50.000`;
+}
+
+function getEditorBody() {
+  const content = bodyInput.cloneNode(true);
+  content.querySelectorAll("b, i, div").forEach((element) => {
+    const tag = element.tagName === "B" ? "strong" : element.tagName === "I" ? "em" : "p";
+    const replacement = document.createElement(tag);
+    replacement.replaceChildren(...element.childNodes);
+    element.replaceWith(replacement);
+  });
+  return cleanArticleHtml(content.innerHTML).trim();
 }
 
 function setEditorStatus(message, state) {
@@ -105,7 +123,6 @@ function renderPosts() {
   listStatus.textContent = currentPosts.length
     ? `${currentPosts.length} tulisan`
     : "Belum ada tulisan tersimpan.";
-  document.querySelector("#import-posts-button").hidden = currentPosts.length !== 0;
 }
 
 async function loadPosts() {
@@ -118,7 +135,12 @@ async function loadPosts() {
   } catch (error) {
     console.error("Daftar tulisan gagal dimuat dari Firestore.", error);
     listStatus.textContent = "Tulisan gagal dimuat.";
-    showNotice("Tidak dapat membaca Firestore. Pastikan UID akun admin sudah dipasang pada firestore.rules dan rules sudah dipublikasikan.");
+    if (error.code === "permission-denied") {
+      const uid = auth.currentUser?.uid ?? "tidak tersedia";
+      showNotice(`Akses Firestore ditolak untuk UID ${uid}. Cocokkan UID ini dengan isAdmin() di firestore.rules, lalu publikasikan rules pada project Firebase yang benar.`);
+    } else {
+      showNotice(`Tulisan gagal dimuat dari Firestore (${error.code ?? "error tidak diketahui"}). Periksa koneksi dan konfigurasi Firebase.`);
+    }
   }
 }
 
@@ -126,18 +148,22 @@ function editPost(post) {
   clearNotice();
   document.querySelector("#post-id").value = post.id;
   document.querySelector("#post-title").value = post.title;
-  slugInput.value = post.slug;
-  slugInput.readOnly = true;
   document.querySelector("#post-date").value = post.date;
-  document.querySelector("#post-category").value = post.category;
+  if (![...categorySelect.options].some((option) => option.value === post.category)) {
+    const option = document.createElement("option");
+    option.value = post.category;
+    option.textContent = `${post.category} (kategori lama)`;
+    option.dataset.legacyCategory = "true";
+    categorySelect.append(option);
+  }
+  categorySelect.value = post.category;
   document.querySelector("#post-excerpt").value = post.excerpt;
-  document.querySelector("#post-body").value = post.body;
+  bodyInput.innerHTML = cleanArticleHtml(marked.parse(post.body));
   document.querySelector("#post-published").checked = post.published;
   document.querySelector("#editor-title").textContent = "Edit tulisan";
   document.querySelector("#delete-post-button").hidden = false;
-  updatePreview();
+  updateBodyCount();
   setEditorStatus("Mengedit tulisan yang tersimpan.");
-  selectEditorTab("write");
   document.querySelector("#post-title").focus();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
@@ -205,53 +231,71 @@ document.querySelector("#cancel-edit-button").addEventListener("click", () => {
   resetForm();
   clearNotice();
 });
-document.querySelector("#write-tab").addEventListener("click", () => selectEditorTab("write"));
-document.querySelector("#preview-tab").addEventListener("click", () => selectEditorTab("preview"));
 
-document.querySelector("#post-title").addEventListener("input", (event) => {
-  if (!slugInput.readOnly && !slugInput.dataset.edited) slugInput.value = slugify(event.currentTarget.value);
+document.querySelector("#editor-toolbar").querySelectorAll("button").forEach((button) => {
+  button.addEventListener("mousedown", (event) => event.preventDefault());
+  button.addEventListener("click", () => {
+    const command = button.dataset.command;
+    let value = button.dataset.value;
+    if (command === "createLink") {
+      const selection = window.getSelection();
+      if (!selection || selection.isCollapsed || !bodyInput.contains(selection.anchorNode)) {
+        showNotice("Pilih teks yang ingin dijadikan tautan terlebih dahulu.");
+        return;
+      }
+      value = window.prompt("Masukkan alamat tautan:");
+      if (!value) return;
+      let protocol;
+      try {
+        protocol = new URL(value, window.location.href).protocol;
+      } catch {
+        showNotice("Alamat tautan tidak valid.");
+        return;
+      }
+      if (!["http:", "https:", "mailto:"].includes(protocol)) {
+        showNotice("Tautan hanya boleh menggunakan http, https, atau email.");
+        return;
+      }
+    }
+    bodyInput.focus();
+    document.execCommand(command, false, value);
+    updateBodyCount();
+    setEditorStatus("Ada perubahan yang belum disimpan.", "dirty");
+  });
 });
-slugInput.addEventListener("input", () => { slugInput.dataset.edited = "true"; });
+
 form.addEventListener("input", (event) => {
-  if (event.target === bodyInput) updatePreview();
+  if (bodyInput.contains(event.target)) updateBodyCount();
   setEditorStatus("Ada perubahan yang belum disimpan.", "dirty");
 });
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   clearNotice();
-  const slug = slugInput.value.trim();
-  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
-    showNotice("Slug hanya boleh berisi huruf kecil, angka, dan tanda hubung.");
-    return;
-  }
   const postId = document.querySelector("#post-id").value;
   const post = {
     title: document.querySelector("#post-title").value.trim(),
-    slug,
     date: document.querySelector("#post-date").value,
-    category: document.querySelector("#post-category").value.trim(),
+    category: categorySelect.value,
     excerpt: document.querySelector("#post-excerpt").value.trim(),
-    body: document.querySelector("#post-body").value.trim(),
+    body: getEditorBody(),
     published: document.querySelector("#post-published").checked,
-    updatedAt: serverTimestamp(),
   };
-  if (!post.title || !post.date || !post.category || !post.excerpt || !post.body) {
+  if (!post.title || !post.date || !post.category || !post.excerpt || !bodyInput.textContent.trim()) {
     showNotice("Lengkapi semua kolom sebelum menyimpan.");
     return;
   }
-  if (postId && postId !== slug) {
-    showNotice("Slug tulisan yang sudah dibuat tidak bisa diubah.");
+  if (post.body.length > 50000) {
+    showNotice("Isi artikel melebihi batas 50.000 karakter setelah pemformatan. Kurangi isi atau pemformatannya.");
     return;
   }
 
   const saveButton = form.querySelector('button[type="submit"]');
   saveButton.disabled = true;
   try {
-    if (!postId && (await getDoc(doc(db, "posts", slug))).exists()) {
-      showNotice("Slug tersebut sudah dipakai. Pilih slug lain.");
-      return;
-    }
+    const slug = postId || await createUniqueSlug(post.title);
+    post.slug = slug;
+    post.updatedAt = serverTimestamp();
     await setDoc(doc(db, "posts", slug), post);
     showNotice("Tulisan berhasil disimpan.", "success");
     resetForm();
@@ -288,16 +332,30 @@ document.querySelector("#import-posts-button").addEventListener("click", async (
     const response = await fetch("/posts.json");
     if (!response.ok) throw new Error(`Seed artikel tidak tersedia (HTTP ${response.status}).`);
     const starterPosts = await response.json();
-    const batch = writeBatch(db);
-    for (const post of starterPosts) {
-      batch.set(doc(db, "posts", post.slug), { ...post, updatedAt: serverTimestamp() });
-    }
-    await batch.commit();
-    showNotice(`${starterPosts.length} tulisan awal berhasil diimpor.`, "success");
+    const importedCount = await runTransaction(db, async (transaction) => {
+      const existingPosts = [];
+      for (const post of starterPosts) {
+        existingPosts.push(await transaction.get(doc(db, "posts", post.slug)));
+      }
+
+      let count = 0;
+      starterPosts.forEach((post, index) => {
+        if (existingPosts[index].exists()) return;
+        transaction.set(doc(db, "posts", post.slug), { ...post, updatedAt: serverTimestamp() });
+        count += 1;
+      });
+      return count;
+    });
+    showNotice(
+      importedCount
+        ? `${importedCount} tulisan baru diimpor. Tulisan yang sudah ada tidak diubah.`
+        : "Tidak ada tulisan baru untuk diimpor. Tulisan yang sudah ada tidak diubah.",
+      "success",
+    );
     await loadPosts();
   } catch (error) {
     console.error("Impor tulisan awal gagal.", error);
-    showNotice("Impor gagal. Periksa aturan Firestore dan koneksi, lalu coba lagi.");
+    showNotice(`Impor gagal (${error.code ?? error.message ?? "error tidak diketahui"}). Periksa aturan Firestore dan koneksi, lalu coba lagi.`);
   } finally {
     button.disabled = false;
   }
@@ -305,7 +363,7 @@ document.querySelector("#import-posts-button").addEventListener("click", async (
 
 document.querySelector("#login-email").value = "";
 document.querySelector("#post-date").value = new Date().toISOString().slice(0, 10);
-updatePreview();
+updateBodyCount();
 if (!firebaseConfigured) {
   document.querySelector("#login-form").querySelectorAll("input, button").forEach((element) => { element.disabled = true; });
   showNotice("Firebase belum dikonfigurasi. Ikuti bagian setup Firebase di README sebelum menggunakan panel admin.");

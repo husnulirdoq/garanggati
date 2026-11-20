@@ -13,6 +13,34 @@ import {
 } from "firebase/firestore";
 import { db, firebaseConfigured } from "./firebase-client.js";
 
+const menuToggle = document.querySelector(".menu-toggle");
+const mainNavigation = document.querySelector("#main-navigation");
+
+function closeNavigation() {
+  menuToggle?.setAttribute("aria-expanded", "false");
+  menuToggle?.setAttribute("aria-label", "Buka menu navigasi");
+  mainNavigation?.classList.remove("open");
+}
+
+menuToggle?.addEventListener("click", () => {
+  const open = menuToggle.getAttribute("aria-expanded") === "true";
+  menuToggle.setAttribute("aria-expanded", String(!open));
+  menuToggle.setAttribute("aria-label", open ? "Buka menu navigasi" : "Tutup menu navigasi");
+  mainNavigation?.classList.toggle("open", !open);
+});
+
+mainNavigation?.addEventListener("click", (event) => {
+  if (event.target.closest("a")) closeNavigation();
+});
+
+document.addEventListener("click", (event) => {
+  if (!event.target.closest(".site-header")) closeNavigation();
+});
+
+window.addEventListener("resize", () => {
+  if (window.innerWidth > 650) closeNavigation();
+});
+
 const searchInput = document.querySelector("#search-input");
 const filters = [...document.querySelectorAll(".filter-chip")];
 const resultCount = document.querySelector("#result-count");

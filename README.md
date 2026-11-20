@@ -45,6 +45,8 @@ Karena GitHub Pages tidak menjalankan server, isi Firestore dimuat oleh browser.
 
 Halaman `/shop/` berisi kartu menuju toko Garanggati di Shopee, TikTok Shop, Blibli, dan Lazada. Kartu saat ini membuka halaman toko masing-masing; untuk menampilkan embed produk individual, gunakan tautan produk yang spesifik.
 
+Tombol **Unduh Wellbeing Tracker** di halaman utama mengarah ke APK Android pada GitHub Release `build-35`. Perbarui `WELLBEING_APK_URL` di `scripts/build.py` ketika APK rilis baru tersedia.
+
 ## Buku tamu
 
 Bagian buku tamu di halaman utama memungkinkan pengunjung mengirim nama dan pesan singkat. Pesan disimpan di koleksi Firestore `guestbook` dan ditampilkan secara real-time, dengan batas 50 karakter untuk nama dan 500 karakter untuk pesan. Pengunjung hanya dapat membaca dan menambahkan pesan; UID admin tetap menjadi satu-satunya akun yang dapat mengubah atau menghapus entri melalui aturan Firestore.

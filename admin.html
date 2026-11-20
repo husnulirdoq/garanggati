@@ -6,7 +6,7 @@
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#f7f6f2">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/styles.css?v=7">
     <title>Admin — Ruang</title>
   </head>
   <body class="admin-page">
@@ -70,9 +70,6 @@
             <input id="post-id" type="hidden">
             <label for="post-title">Judul</label>
             <input id="post-title" maxlength="120" required>
-            <label for="post-slug">Slug URL</label>
-            <input id="post-slug" pattern="[a-z0-9]+(-[a-z0-9]+)*" required>
-            <p class="field-help">Huruf kecil, angka, dan tanda hubung. Slug tidak dapat diubah setelah tulisan dibuat.</p>
             <div class="form-row">
               <div>
                 <label for="post-date">Tanggal</label>
@@ -80,28 +77,33 @@
               </div>
               <div>
                 <label for="post-category">Topik</label>
-                <input id="post-category" maxlength="40" list="category-options" required>
-                <datalist id="category-options">
-                  <option value="Filsafat"></option>
-                  <option value="Bahasa"></option>
-                  <option value="Teknologi"></option>
-                  <option value="Belajar"></option>
-                </datalist>
+                <select id="post-category" required>
+                  <option value="" selected disabled>Pilih topik</option>
+                  <option value="Filsafat">Filsafat</option>
+                  <option value="Bahasa">Bahasa</option>
+                  <option value="Teknologi">Teknologi</option>
+                  <option value="Belajar">Belajar</option>
+                </select>
               </div>
             </div>
-            <label for="post-excerpt">Ringkasan</label>
-            <textarea id="post-excerpt" rows="2" maxlength="300" required></textarea>
+            <label for="post-excerpt">Ringkasan singkat</label>
+            <textarea id="post-excerpt" rows="2" maxlength="300" placeholder="Contoh: Menjelaskan ulang dengan kata sendiri membantu menemukan bagian yang belum dipahami." aria-describedby="excerpt-help" required></textarea>
+            <p class="field-help" id="excerpt-help">Tulis 1–2 kalimat tentang inti tulisan. Ringkasan ini tampil di kartu artikel sebelum dibuka.</p>
             <div class="field-heading">
-              <label for="post-body">Isi artikel</label>
+              <span id="post-body-label">Isi artikel</span>
               <span id="body-count">0 / 50.000</span>
             </div>
-            <div class="editor-tabs" role="tablist" aria-label="Mode editor artikel">
-              <button class="editor-tab active" id="write-tab" type="button" role="tab" aria-selected="true">Tulis Markdown</button>
-              <button class="editor-tab" id="preview-tab" type="button" role="tab" aria-selected="false">Pratinjau</button>
+            <div class="editor-toolbar" id="editor-toolbar" role="toolbar" aria-label="Pemformatan artikel">
+              <button type="button" data-command="bold" aria-label="Tebalkan" title="Tebalkan"><strong>B</strong></button>
+              <button type="button" data-command="italic" aria-label="Miringkan" title="Miringkan"><em>I</em></button>
+              <button type="button" data-command="formatBlock" data-value="<h2>" title="Judul bagian">Judul bagian</button>
+              <button type="button" data-command="formatBlock" data-value="<h3>" title="Subjudul">Subjudul</button>
+              <button type="button" data-command="insertUnorderedList" title="Daftar berpoin">• Daftar</button>
+              <button type="button" data-command="formatBlock" data-value="<blockquote>" title="Kutipan">Kutipan</button>
+              <button type="button" data-command="createLink" title="Tambahkan tautan">Tautan</button>
             </div>
-            <textarea id="post-body" rows="12" maxlength="50000" aria-describedby="markdown-help" required></textarea>
-            <div class="markdown-preview" id="post-preview" role="tabpanel" hidden></div>
-            <p class="field-help" id="markdown-help">Gunakan Markdown untuk subjudul, tautan, kutipan, dan daftar.</p>
+            <div id="post-body" class="rich-text-editor" contenteditable="true" role="textbox" aria-multiline="true" aria-labelledby="post-body-label" aria-describedby="body-count editor-help" aria-required="true"></div>
+            <p class="field-help" id="editor-help">Tulis seperti biasa. Pilih teks lalu gunakan tombol di atas jika ingin memformatnya.</p>
             <label class="publish-toggle"><input id="post-published" type="checkbox" checked> Terbitkan tulisan</label>
             <p class="editor-status" id="editor-status" aria-live="polite"></p>
             <div class="editor-actions">
@@ -120,8 +122,9 @@
               <p class="eyebrow">PERPUSTAKAAN</p>
               <h2>Tulisan tersimpan</h2>
             </div>
-            <button class="secondary-button" id="import-posts-button" type="button" hidden>Impor 5 tulisan awal</button>
+            <button class="secondary-button" id="import-posts-button" type="button">Impor tulisan dari Codespaces</button>
           </div>
+          <p class="field-help">Hanya tulisan yang belum ada yang ditambahkan. Tulisan di Firestore tidak ditimpa.</p>
           <p class="panel-description" id="post-list-status" aria-live="polite"></p>
           <ul class="admin-post-list" id="admin-post-list"></ul>
         </section>
@@ -132,6 +135,6 @@
       <span>Panel admin hanya untuk pengelola.</span>
       <a href="/">Kembali ke blog →</a>
     </footer>
-    <script type="module" src="/admin.js"></script>
+    <script type="module" src="/admin.js?v=7"></script>
   </body>
 </html>
