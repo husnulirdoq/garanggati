@@ -78,6 +78,29 @@ kbd { padding: 2px 5px; border: 1px solid #e6e4dc; border-radius: 3px; color: #9
 .read-link span { transition: transform .16s; }
 .read-link:hover span { transform: translateX(3px); }
 .no-results { padding: 55px 0; color: var(--muted); text-align: center; font-size: 12px; }
+.web3-section { max-width: 1080px; margin: 0 auto; padding: 68px 20px 82px; border-top: 1px solid var(--line); scroll-margin-top: 85px; }
+.web3-heading { display: flex; align-items: end; justify-content: space-between; gap: 20px; }
+.web3-heading .eyebrow { margin-bottom: 9px; }
+.web3-heading h2 { margin: 0; font: 600 30px "Segoe UI", sans-serif; letter-spacing: -1.2px; }
+.web3-heading > p { max-width: 310px; margin: 0 0 3px; color: #85867f; font-size: 11px; line-height: 1.7; }
+.web3-panel { display: grid; grid-template-columns: minmax(220px, 1fr) auto; gap: 16px; margin-top: 24px; padding: 21px; border: 1px solid #ebe9e2; border-radius: 8px; background: var(--surface); }
+.web3-network { display: flex; align-items: center; gap: 12px; }
+.web3-badge { display: grid; width: 54px; height: 54px; flex: 0 0 54px; place-items: center; border-radius: 50%; background: var(--green-pale); color: var(--green-dark); font: 700 10px "Segoe UI", sans-serif; }
+.web3-network strong { font-size: 13px; }
+.web3-network p { margin: 4px 0 0; color: var(--muted); font-size: 10px; }
+.web3-connect, .web3-submit { min-height: 40px; padding: 0 13px; border: 1px solid var(--green); border-radius: 5px; background: var(--green); color: white; cursor: pointer; font-size: 10px; font-weight: 600; }
+.web3-connect:hover, .web3-submit:hover { border-color: var(--green-dark); background: var(--green-dark); }
+.web3-connect:disabled, .web3-submit:disabled { cursor: not-allowed; opacity: .55; }
+.web3-wallet { grid-column: 1 / -1; margin: 0; color: #777970; font-size: 10px; }
+.web3-recipient { grid-column: 1 / -1; margin: 0; color: #777970; font-size: 10px; overflow-wrap: anywhere; }
+.web3-recipient code { color: var(--green-dark); font-size: 10px; }
+.web3-form { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 10px; }
+.web3-form label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.web3-form input { width: 100%; min-height: 42px; padding: 9px 11px; border: 1px solid #e2e0d8; border-radius: 6px; outline: none; background: #fcfbf7; color: var(--ink); font-size: 12px; }
+.web3-form input:focus { border-color: #9eaf96; box-shadow: 0 0 0 3px rgb(120 151 110 / 12%); }
+.web3-status { grid-column: 1 / -1; min-height: 16px; margin: 0; color: #806541; font-size: 10px; overflow-wrap: anywhere; }
+.web3-status.success { color: var(--green-dark); }
+.web3-status.error { color: #9b5d50; }
 .guestbook-section { max-width: 1080px; margin: 0 auto; padding: 68px 20px 82px; border-top: 1px solid var(--line); scroll-margin-top: 85px; }
 .guestbook-heading { display: flex; align-items: end; justify-content: space-between; gap: 20px; }
 .guestbook-heading .eyebrow { margin-bottom: 9px; }
@@ -297,6 +320,16 @@ kbd { padding: 2px 5px; border: 1px solid #e6e4dc; border-radius: 3px; color: #9
   .filter-chip { flex: 0 0 auto; }
   .posts-grid { grid-template-columns: 1fr; gap: 11px; }
   .post-card { min-height: 190px; padding: 17px; }
+  .web3-section { padding: 48px 19px 58px; }
+  .web3-heading { align-items: stretch; flex-direction: column; gap: 8px; }
+  .web3-heading h2 { font-size: 25px; }
+  .web3-heading > p { max-width: none; }
+  .web3-panel { grid-template-columns: 1fr; }
+  .web3-network { margin-bottom: 2px; }
+  .web3-connect { width: 100%; }
+  .web3-form { grid-template-columns: 1fr; }
+  .web3-form input { min-height: 44px; }
+  .web3-submit { width: 100%; }
   .guestbook-section { padding: 48px 19px 58px; }
   .guestbook-heading { align-items: stretch; flex-direction: column; gap: 8px; }
   .guestbook-heading h2 { font-size: 25px; }

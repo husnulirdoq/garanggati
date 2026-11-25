@@ -1,4 +1,4 @@
-const CACHE_NAME = "ruang-blog-v8";
+const CACHE_NAME = "ruang-blog-v9";
 const BUILD_CHUNKS = [];
 const APP_SHELL = ["/index.html", "/admin/index.html", "/shop/index.html", "/styles.css", "/blog.js", "/admin.js", "/posts.json", "/manifest.json", "/icon.svg", "/icon-192.png", "/icon-512.png", ...BUILD_CHUNKS];
 

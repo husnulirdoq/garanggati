@@ -244,7 +244,7 @@ def shell(title, description, body, canonical, extra_head="", og_type="website")
       </div>
       <a href="/admin/">Login admin <span aria-hidden="true">↗</span></a>
     </footer>
-    <script type="module" src="/blog.js?v=7"></script>
+    <script type="module" src="/blog.js?v=8"></script>
   </body>
 </html>
 """
@@ -288,6 +288,33 @@ def build_home(posts):
           {cards}
         </div>
         <p class="no-results" id="no-results" hidden>Tidak ada tulisan yang cocok. Coba kata kunci atau topik lain.</p>
+      </section>
+      <section class="web3-section" id="donasi-web3" aria-labelledby="web3-heading">
+        <div class="web3-heading">
+          <div>
+            <p class="eyebrow">DONASI WEB3 · BASE MAINNET</p>
+            <h2 id="web3-heading">Donasi USDC<span class="brand-period">.</span></h2>
+          </div>
+          <p>Transaksi memakai USDC sungguhan dan tidak dapat dibatalkan. Periksa detail di wallet sebelum menyetujui.</p>
+        </div>
+        <div class="web3-panel">
+          <div class="web3-network">
+            <span class="web3-badge">8453</span>
+            <div>
+              <strong>Base Mainnet · USDC</strong>
+              <p>Wallet memerlukan ETH di Base untuk membayar gas.</p>
+            </div>
+          </div>
+          <button class="web3-connect" id="web3-connect" type="button">Hubungkan wallet</button>
+          <p class="web3-wallet" id="web3-wallet" role="status" aria-live="polite">Wallet belum terhubung.</p>
+          <p class="web3-recipient">Penerima: <code id="web3-recipient-display"></code></p>
+          <form class="web3-form" id="web3-form">
+            <label for="web3-amount">Jumlah USDC</label>
+            <input id="web3-amount" name="amount" type="number" inputmode="decimal" min="0.000001" step="0.000001" placeholder="Contoh: 1.00" required>
+            <button class="web3-submit" id="web3-submit" type="submit" disabled>Kirim donasi USDC</button>
+          </form>
+          <p class="web3-status" id="web3-status" role="status" aria-live="polite"></p>
+        </div>
       </section>
       <section class="guestbook-section" id="buku-tamu" aria-labelledby="guestbook-heading">
         <div class="guestbook-heading">

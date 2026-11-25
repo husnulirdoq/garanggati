@@ -41,6 +41,12 @@ Artikel terbit dalam `content/posts/` ditampilkan bersama artikel terbit dari Fi
 
 Karena GitHub Pages tidak menjalankan server, isi Firestore dimuat oleh browser. Artikel di `content/posts/` dibuat sebagai halaman statis dengan URL kanonis per artikel, metadata, data terstruktur, dan entri sitemap. Artikel yang hanya ada di Firestore tetap dirender di browser dan belum otomatis masuk sitemap sampai tersedia di `content/posts/`. Feed RSS belum tersedia. Jangan simpan artikel rahasia di Firestore; pengunjung dapat membaca semua dokumen yang berstatus terbit.
 
+## Donasi Web3
+
+Halaman utama menampilkan pilot donasi **USDC sungguhan di Base Mainnet** (`chainId 8453`). Wallet browser EVM, seperti MetaMask, harus memiliki USDC untuk donasi dan ETH di Base untuk gas. Penerima adalah alamat wallet yang diberikan pemilik situs; transaksi harus diperiksa dengan teliti di wallet sebelum disetujui dan tidak dapat dibatalkan setelah dikonfirmasi.
+
+Integrasi berinteraksi langsung dengan kontrak USDC resmi Base (`0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`), tanpa perantara atau penyimpanan private key. Alamat penerima dan transaksi dapat dilihat publik di blockchain. Jangan masukkan seed phrase atau private key di situs.
+
 ## Shop
 
 Halaman `/shop/` berisi kartu menuju toko Garanggati di Shopee, TikTok Shop, Blibli, dan Lazada. Kartu saat ini membuka halaman toko masing-masing; untuk menampilkan embed produk individual, gunakan tautan produk yang spesifik.

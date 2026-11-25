@@ -41,6 +41,142 @@ window.addEventListener("resize", () => {
   if (window.innerWidth > 650) closeNavigation();
 });
 
+const web3Connect = document.querySelector("#web3-connect");
+const web3Wallet = document.querySelector("#web3-wallet");
+const web3Form = document.querySelector("#web3-form");
+const web3RecipientDisplay = document.querySelector("#web3-recipient-display");
+const web3Amount = document.querySelector("#web3-amount");
+const web3Submit = document.querySelector("#web3-submit");
+const web3Status = document.querySelector("#web3-status");
+const baseChainId = "0x2105";
+const usdcContract = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
+const donationRecipient = "0x38BDa56d56D74A410e9ceaE5a981EbD722dd9613";
+let connectedAccount = "";
+if (web3RecipientDisplay) web3RecipientDisplay.textContent = donationRecipient;
+
+function setWeb3Status(message, state = "") {
+  if (!web3Status) return;
+  web3Status.textContent = message;
+  web3Status.className = `web3-status${state ? ` ${state}` : ""}`;
+}
+
+function isAddress(value) {
+  return /^0x[0-9a-fA-F]{40}$/.test(value);
+}
+
+function usdcToUnits(value) {
+  const match = /^([0-9]+)(?:\.([0-9]{1,6}))?$/.exec(value);
+  if (!match) throw new Error("Jumlah USDC harus positif dengan maksimal 6 angka desimal.");
+  const units = BigInt(match[1]) * 1000000n + BigInt((match[2] ?? "").padEnd(6, "0") || "0");
+  if (units <= 0n) throw new Error("Jumlah USDC harus lebih besar dari 0.");
+  return units.toString(16).padStart(64, "0");
+}
+
+function encodeUsdcTransfer(recipient, amount) {
+  const address = recipient.slice(2).toLowerCase().padStart(64, "0");
+  return `0xa9059cbb${address}${usdcToUnits(amount)}`;
+}
+
+async function ensureBaseMainnet() {
+  if (!window.ethereum) throw new Error("Wallet browser tidak ditemukan. Instal MetaMask atau wallet EVM.");
+  const chainId = await window.ethereum.request({ method: "eth_chainId" });
+  if (chainId.toLowerCase() === baseChainId) return;
+  try {
+    await window.ethereum.request({
+      method: "wallet_switchEthereumChain",
+      params: [{ chainId: baseChainId }],
+    });
+  } catch (error) {
+    if (error?.code !== 4902) throw error;
+    await window.ethereum.request({
+      method: "wallet_addEthereumChain",
+      params: [{
+        chainId: baseChainId,
+        chainName: "Base",
+        nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+        rpcUrls: ["https://mainnet.base.org"],
+        blockExplorerUrls: ["https://basescan.org"],
+      }],
+    });
+  }
+}
+
+async function connectWeb3() {
+  if (!web3Connect) return;
+  try {
+    await ensureBaseMainnet();
+    const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+    connectedAccount = accounts[0] ?? "";
+    if (!connectedAccount) throw new Error("Tidak ada akun wallet yang dipilih.");
+    web3Wallet.textContent = `Terhubung: ${connectedAccount.slice(0, 6)}...${connectedAccount.slice(-4)}`;
+    web3Connect.textContent = "Wallet terhubung";
+    web3Submit.disabled = false;
+    setWeb3Status("Wallet terhubung ke Base Mainnet. Transaksi memakai USDC sungguhan.", "success");
+  } catch (error) {
+    setWeb3Status(error?.message || "Gagal menghubungkan wallet.", "error");
+  }
+}
+
+web3Connect?.addEventListener("click", connectWeb3);
+
+web3Form?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const amount = web3Amount?.value.trim() ?? "";
+  if (!connectedAccount) {
+    setWeb3Status("Hubungkan wallet terlebih dahulu.", "error");
+    return;
+  }
+  if (!isAddress(donationRecipient) || !isAddress(usdcContract)) {
+    setWeb3Status("Konfigurasi alamat donasi tidak valid. Transaksi dibatalkan.", "error");
+    return;
+  }
+  try {
+    const data = encodeUsdcTransfer(donationRecipient, amount);
+    await ensureBaseMainnet();
+    web3Submit.disabled = true;
+    setWeb3Status("Periksa jumlah, token USDC, dan alamat penerima di wallet sebelum menyetujui.");
+    const txHash = await window.ethereum.request({
+      method: "eth_sendTransaction",
+      params: [{
+        from: connectedAccount,
+        to: usdcContract,
+        value: "0x0",
+        data,
+      }],
+    });
+    setWeb3Status(`Transaksi dikirim. Lihat status di BaseScan: https://basescan.org/tx/${txHash}`, "success");
+  } catch (error) {
+    setWeb3Status(error?.message || "Transaksi dibatalkan atau gagal.", "error");
+  } finally {
+    web3Submit.disabled = false;
+  }
+});
+
+if (window.ethereum) {
+  window.ethereum.on?.("accountsChanged", (accounts) => {
+    connectedAccount = accounts[0] ?? "";
+    if (connectedAccount) {
+      web3Wallet.textContent = `Terhubung: ${connectedAccount.slice(0, 6)}...${connectedAccount.slice(-4)}`;
+      web3Submit.disabled = false;
+    } else {
+      web3Wallet.textContent = "Wallet belum terhubung.";
+      web3Submit.disabled = true;
+      web3Connect.textContent = "Hubungkan wallet";
+    }
+  });
+  window.ethereum.on?.("chainChanged", () => {
+    window.ethereum.request({ method: "eth_chainId" }).then((chainId) => {
+      if (chainId.toLowerCase() !== baseChainId) {
+        web3Submit.disabled = true;
+        setWeb3Status("Wallet tidak berada di Base Mainnet. Transaksi dinonaktifkan.", "error");
+      } else {
+        web3Submit.disabled = !connectedAccount;
+        setWeb3Status("Wallet berada di Base Mainnet.", "success");
+      }
+    });
+  });
+}
+
 const searchInput = document.querySelector("#search-input");
 const filters = [...document.querySelectorAll(".filter-chip")];
 const resultCount = document.querySelector("#result-count");
