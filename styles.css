@@ -46,6 +46,29 @@ button { color: inherit; }
 .hero-admin-link span { color: #96978c; font-size: 10px; }
 .hero-decoration { position: absolute; top: 67px; right: max(11vw, calc((100vw - 1080px) / 2)); color: rgb(182 163 111 / 20%); font-size: 196px; line-height: 1; }
 
+.btc-section { max-width: 1080px; margin: 0 auto; padding: 46px 20px 30px; scroll-margin-top: 85px; }
+.btc-heading { display: flex; align-items: end; justify-content: space-between; gap: 20px; }
+.btc-heading .eyebrow { margin-bottom: 9px; }
+.btc-heading h2 { margin: 0; font: 600 27px "Segoe UI", sans-serif; letter-spacing: -1px; }
+.btc-heading > p { max-width: 300px; margin: 0 0 3px; color: #85867f; font-size: 11px; line-height: 1.7; }
+.btc-card { margin-top: 18px; padding: 20px 22px 14px; border: 1px solid #ebe9e2; border-radius: 9px; background: var(--surface); }
+.btc-summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.btc-label, .btc-period-label { margin: 0; color: #999a91; font-size: 9px; }
+.btc-price { margin: 5px 0 0; font: 600 clamp(25px, 4vw, 35px)/1.2 "Segoe UI", sans-serif; letter-spacing: -1px; font-variant-numeric: tabular-nums; }
+.btc-change-wrap { display: grid; justify-items: end; gap: 4px; }
+.btc-change { padding: 6px 9px; border-radius: 5px; background: var(--green-pale); color: var(--green-dark); font-size: 10px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.btc-change.negative { background: #f7ece9; color: #9b5d50; }
+.btc-chart-wrap { height: 245px; margin-top: 12px; }
+.btc-chart { display: block; width: 100%; height: 100%; overflow: visible; }
+.btc-gridline { stroke: #efeee8; stroke-width: 1; vector-effect: non-scaling-stroke; }
+.btc-axis-label { fill: #a1a198; font: 10px "DM Sans", "Segoe UI", sans-serif; }
+.btc-chart-area { fill: rgb(88 116 86 / 11%); }
+.btc-chart-line { fill: none; stroke: var(--green); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.5; vector-effect: non-scaling-stroke; }
+.btc-chart-point { display: none; fill: var(--surface); stroke: var(--green); stroke-width: 2.5; vector-effect: non-scaling-stroke; }
+.btc-chart-axis { display: flex; justify-content: space-between; margin-top: 4px; color: #a1a198; font-size: 9px; }
+.btc-status { min-height: 16px; margin: 12px 0 0; color: #85867f; font-size: 9px; }
+.btc-status.error { color: #9b5d50; }
+.btc-disclaimer { margin: 5px 0 0; color: #a1a198; font-size: 9px; }
 .posts-section { max-width: 1080px; min-height: 470px; margin: 0 auto; padding: 69px 20px 82px; scroll-margin-top: 85px; }
 .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 20px; }
 .section-heading .eyebrow { margin-bottom: 9px; }
@@ -299,6 +322,13 @@ kbd { padding: 2px 5px; border: 1px solid #e6e4dc; border-radius: 3px; color: #9
   .hero-decoration { top: 138px; right: 3px; font-size: 112px; }
   .hero-actions { gap: 8px; }
   .hero-link, .hero-admin-link { min-height: 35px; padding: 0 10px; font-size: 9px; }
+  .btc-section { padding: 34px 19px 20px; }
+  .btc-heading { align-items: stretch; flex-direction: column; gap: 7px; }
+  .btc-heading h2 { font-size: 24px; }
+  .btc-heading > p { max-width: none; }
+  .btc-card { padding: 16px 13px 12px; }
+  .btc-chart-wrap { height: 205px; margin-right: -4px; margin-left: -4px; }
+  .btc-axis-label { font-size: 12px; }
   .posts-section { padding: 48px 19px 58px; }
   .shop-hero { padding: 55px 25px 42px; }
   .shop-hero h1 { font-size: clamp(40px, 11vw, 54px); letter-spacing: -2.4px; }

@@ -47,6 +47,10 @@ Halaman utama menampilkan pilot donasi **USDC sungguhan di Base Mainnet** (`chai
 
 Integrasi berinteraksi langsung dengan kontrak USDC resmi Base (`0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`), tanpa perantara atau penyimpanan private key. Alamat penerima dan transaksi dapat dilihat publik di blockchain. Jangan masukkan seed phrase atau private key di situs.
 
+## Grafik BTC live
+
+Halaman utama menampilkan grafik BTC/USD yang mulai menggambar saat halaman dibuka, menggunakan ticker gratis CoinPaprika tanpa API key. Data CoinPaprika adalah harga agregat tertimbang dari pasar yang dipantau; paket gratis diperbarui rata-rata setiap lima menit, bukan tick bursa real-time. API paket gratis memiliki kuota 20.000 request per bulan, sehingga widget meminta data tiap lima menit. Endpoint merespons dari workspace dan mengizinkan CORS, tetapi akses dari Codespaces tidak menjamin endpoint dapat diakses dari semua ISP Indonesia. Fitur ini hanya menampilkan data pasar; tidak melakukan trading dan bukan saran investasi.
+
 ## Shop
 
 Halaman `/shop/` berisi kartu menuju toko Garanggati di Shopee, TikTok Shop, Blibli, dan Lazada. Kartu saat ini membuka halaman toko masing-masing; untuk menampilkan embed produk individual, gunakan tautan produk yang spesifik.

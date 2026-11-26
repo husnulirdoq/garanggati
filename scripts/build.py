@@ -244,7 +244,7 @@ def shell(title, description, body, canonical, extra_head="", og_type="website")
       </div>
       <a href="/admin/">Login admin <span aria-hidden="true">↗</span></a>
     </footer>
-    <script type="module" src="/blog.js?v=8"></script>
+    <script type="module" src="/blog.js?v=10"></script>
   </body>
 </html>
 """
@@ -265,6 +265,45 @@ def build_home(posts):
           <a class="hero-admin-link" href="/admin/">Login admin <span aria-hidden="true">↗</span></a>
         </div>
         <span class="hero-decoration" aria-hidden="true">✳</span>
+      </section>
+      <section class="btc-section" id="btc-live" aria-labelledby="btc-heading">
+        <div class="btc-heading">
+          <div>
+            <p class="eyebrow">PASAR KRIPTO · COINPAPRIKA</p>
+            <h2 id="btc-heading">Bitcoin / USD<span class="brand-period">.</span></h2>
+          </div>
+          <p>Grafik bergerak dari harga agregat CoinPaprika; data gratis diperbarui rata-rata tiap lima menit.</p>
+        </div>
+        <div class="btc-card">
+          <div class="btc-summary">
+            <div>
+              <p class="btc-label">BTC / USD</p>
+              <p class="btc-price" id="btc-price" aria-live="polite">Memuat harga...</p>
+            </div>
+            <div class="btc-change-wrap">
+              <span class="btc-change" id="btc-change">--</span>
+              <span class="btc-period-label">24 jam</span>
+            </div>
+          </div>
+          <div class="btc-chart-wrap">
+            <svg class="btc-chart" viewBox="0 0 760 240" role="img" aria-labelledby="btc-chart-title btc-chart-description" preserveAspectRatio="none">
+              <title id="btc-chart-title">Grafik harga Bitcoin terhadap dolar AS</title>
+              <desc id="btc-chart-description">Grafik harga BTC/USD sejak pemantauan dimulai, dari CoinPaprika.</desc>
+              <line class="btc-gridline" x1="0" y1="20" x2="760" y2="20"></line>
+              <line class="btc-gridline" x1="0" y1="120" x2="760" y2="120"></line>
+              <line class="btc-gridline" x1="0" y1="220" x2="760" y2="220"></line>
+              <text class="btc-axis-label" id="btc-axis-high" x="750" y="15" text-anchor="end"></text>
+              <text class="btc-axis-label" id="btc-axis-mid" x="750" y="115" text-anchor="end"></text>
+              <text class="btc-axis-label" id="btc-axis-low" x="750" y="215" text-anchor="end"></text>
+              <path class="btc-chart-area" id="btc-chart-area"></path>
+              <polyline class="btc-chart-line" id="btc-chart-line" points=""></polyline>
+              <circle class="btc-chart-point" id="btc-chart-point" r="4" cx="0" cy="0"></circle>
+            </svg>
+          </div>
+          <div class="btc-chart-axis"><span id="btc-axis-start">Mulai dipantau</span><span>Sekarang</span></div>
+          <p class="btc-status" id="btc-status" role="status" aria-live="polite">Memuat harga dari CoinPaprika...</p>
+          <p class="btc-disclaimer">Harga pasar BTC/USD untuk informasi saja, bukan saran investasi.</p>
+        </div>
       </section>
       <section class="posts-section" id="tulisan">
         <div class="section-heading">

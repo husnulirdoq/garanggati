@@ -41,6 +41,141 @@ window.addEventListener("resize", () => {
   if (window.innerWidth > 650) closeNavigation();
 });
 
+const btcPrice = document.querySelector("#btc-price");
+const btcChange = document.querySelector("#btc-change");
+const btcStatus = document.querySelector("#btc-status");
+const btcChartLine = document.querySelector("#btc-chart-line");
+const btcChartArea = document.querySelector("#btc-chart-area");
+const btcChartDescription = document.querySelector("#btc-chart-description");
+const btcChartPoint = document.querySelector("#btc-chart-point");
+const btcAxisHigh = document.querySelector("#btc-axis-high");
+const btcAxisMid = document.querySelector("#btc-axis-mid");
+const btcAxisLow = document.querySelector("#btc-axis-low");
+const btcAxisStart = document.querySelector("#btc-axis-start");
+const btcLivePrices = [];
+const btcPriceFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  maximumFractionDigits: 2,
+});
+let btcPollingTimer;
+let btcPollingInProgress = false;
+let btcStopped = false;
+let btcDailyChange = null;
+
+function setBtcStatus(message, isError = false) {
+  if (!btcStatus) return;
+  btcStatus.textContent = message;
+  btcStatus.classList.toggle("error", isError);
+}
+
+function drawBtcChart() {
+  const values = btcLivePrices.map((point) => point.price);
+  if (!values.length || !btcChartLine || !btcChartArea) return;
+  const minimum = Math.min(...values);
+  const maximum = Math.max(...values);
+  const padding = Math.max((maximum - minimum) * 0.12, maximum * 0.0005);
+  const low = minimum - padding;
+  const high = maximum + padding;
+  const points = values.map((price, index) => {
+    const x = values.length === 1 ? 760 : (index / (values.length - 1)) * 760;
+    const y = 220 - ((price - low) / (high - low)) * 200;
+    return `${x.toFixed(2)},${y.toFixed(2)}`;
+  });
+  const linePoints = values.length === 1 ? `0,${points[0].split(",")[1]} ${points[0]}` : points.join(" ");
+  btcChartLine.setAttribute("points", linePoints);
+  btcChartArea.setAttribute("d", `M0,220 L${linePoints.replaceAll(" ", " L")} L760,220 Z`);
+  btcChartPoint.setAttribute("cx", "760");
+  btcChartPoint.setAttribute("cy", points.at(-1).split(",")[1]);
+  btcChartPoint.style.display = "block";
+  btcAxisHigh.textContent = btcPriceFormatter.format(high);
+  btcAxisMid.textContent = btcPriceFormatter.format((high + low) / 2);
+  btcAxisLow.textContent = btcPriceFormatter.format(low);
+
+  btcChange.textContent = Number.isFinite(btcDailyChange)
+    ? `${btcDailyChange >= 0 ? "+" : ""}${btcDailyChange.toFixed(2)}%`
+    : "--";
+  btcChange.classList.toggle("negative", btcDailyChange < 0);
+  btcChartDescription.textContent =
+    "Grafik harga agregat BTC/USD CoinPaprika sejak pemantauan dimulai.";
+}
+
+function addBtcPrice(price, timestamp) {
+  if (!Number.isFinite(price) || price <= 0) return;
+  const latestPoint = btcLivePrices.at(-1);
+  if (latestPoint && timestamp <= latestPoint.time) return;
+  btcLivePrices.push({ time: timestamp, price });
+  const cutoff = Date.now() / 1000 - 24 * 60 * 60;
+  while (btcLivePrices.length > 1 && btcLivePrices[0].time < cutoff) btcLivePrices.shift();
+  while (btcLivePrices.length > 289) btcLivePrices.shift();
+  if (btcLivePrices.length) {
+    const first = new Date(btcLivePrices[0].time * 1000);
+    btcAxisStart.textContent = `Mulai ${new Intl.DateTimeFormat("id-ID", {
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: "Asia/Jakarta",
+    }).format(first)}`;
+  }
+  btcPrice.textContent = btcPriceFormatter.format(price);
+  drawBtcChart();
+}
+
+async function pollBtcTicker() {
+  if (btcPollingInProgress) return;
+  btcPollingInProgress = true;
+  try {
+    const response = await fetch("https://api.coinpaprika.com/v1/tickers/btc-bitcoin?quotes=USD");
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const ticker = await response.json();
+    const quote = ticker.quotes?.USD;
+    const price = Number(quote?.price);
+    const percentChange = Number(quote?.percent_change_24h);
+    const updatedAt = Date.parse(ticker.last_updated);
+    if (!Number.isFinite(price) || price <= 0 || !Number.isFinite(updatedAt)) {
+      throw new Error("respons CoinPaprika tidak berisi harga dan waktu pembaruan yang valid");
+    }
+
+    btcDailyChange = Number.isFinite(percentChange) ? percentChange : null;
+    addBtcPrice(price, updatedAt / 1000);
+    const updatedTime = new Intl.DateTimeFormat("id-ID", {
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: "Asia/Jakarta",
+    }).format(new Date(updatedAt));
+    const ageMinutes = Math.max(0, Math.floor((Date.now() - updatedAt) / 60000));
+    setBtcStatus(
+      `CoinPaprika · sumber diperbarui ${updatedTime} WIB${ageMinutes ? ` · ${ageMinutes} menit lalu` : ""}`,
+    );
+  } catch (error) {
+    console.error("BTC/USD ticker failed to load from CoinPaprika.", error);
+    setBtcStatus(`Data CoinPaprika belum tersedia: ${error.message}`, true);
+  } finally {
+    btcPollingInProgress = false;
+  }
+}
+
+function startBtcPolling() {
+  if (btcPollingTimer || btcStopped) return;
+  setBtcStatus("Mengambil harga BTC dari CoinPaprika...");
+  pollBtcTicker();
+  btcPollingTimer = window.setInterval(pollBtcTicker, 5 * 60 * 1000);
+}
+
+if (btcStatus) {
+  startBtcPolling();
+
+  window.addEventListener("pagehide", () => {
+    btcStopped = true;
+    window.clearInterval(btcPollingTimer);
+    btcPollingTimer = null;
+  });
+  window.addEventListener("pageshow", () => {
+    if (!btcStopped) return;
+    btcStopped = false;
+    startBtcPolling();
+  });
+}
+
 const web3Connect = document.querySelector("#web3-connect");
 const web3Wallet = document.querySelector("#web3-wallet");
 const web3Form = document.querySelector("#web3-form");
