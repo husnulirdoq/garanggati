@@ -7,7 +7,7 @@ import shutil
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from urllib.parse import quote
-
+import urllib.request
 import bleach
 import markdown
 
@@ -18,6 +18,8 @@ OUTPUT = ROOT / "_site"
 BASE_URL = "https://garanggati.web.id"
 WELLBEING_APK_URL = "https://github.com/husnulirdoq/wellbeing-flet2/releases/download/build-36/wellbeing-tracker.apk"
 GA4_MEASUREMENT_ID = "G-9XYG7QZPFV"
+FIREBASE_PROJECT_ID = "ruang-41bfe"
+FIREBASE_API_KEY = "AIzaSyAzqxcBspb8EDiqiMVt48tVuW3ncerE4FI"
 SITE_NAME = "Ruang"
 SITE_DESCRIPTION = "Catatan tentang filsafat, bahasa, teknologi, dan cara belajar."
 ALLOWED_TAGS = {
@@ -432,7 +434,17 @@ def build_home(posts):
 
 
 def build_post(post, recent_posts):
-    article_html = render_markdown(post["body"])
+    if post.get("html"):
+        article_html = bleach.clean(
+            post["body"],
+            tags=ALLOWED_TAGS,
+            attributes=ALLOWED_ATTRIBUTES,
+            protocols={"http", "https", "mailto"},
+            strip=True,
+        )
+    else:
+        article_html = render_markdown(post["body"])
+
     recent = "\n".join(
         f'<li><a href="{post_url(item)}">{escape(item["title"])}</a></li>'
         for item in recent_posts if item["slug"] != post["slug"]
@@ -585,12 +597,81 @@ def build_not_found():
     """
     return shell("Halaman tidak ditemukan — " + SITE_NAME, SITE_DESCRIPTION, body, BASE_URL + "/404.html")
 
+def firestore_value(value):
+    if "stringValue" in value:
+        return value["stringValue"]
+    if "booleanValue" in value:
+        return value["booleanValue"]
+    if "integerValue" in value:
+        return int(value["integerValue"])
+    if "timestampValue" in value:
+        return value["timestampValue"]
+    return ""
+
+
+def fetch_firestore_posts():
+    base = (
+        f"https://firestore.googleapis.com/v1/projects/{FIREBASE_PROJECT_ID}"
+        f"/databases/(default)/documents/posts"
+    )
+    documents = []
+    page_token = ""
+    try:
+        while True:
+            query = f"?key={FIREBASE_API_KEY}&pageSize=300"
+            if page_token:
+                query += f"&pageToken={quote(page_token)}"
+            with urllib.request.urlopen(base + query, timeout=30) as response:
+                payload = json.load(response)
+            documents.extend(payload.get("documents", []))
+            page_token = payload.get("nextPageToken", "")
+            if not page_token:
+                break
+    except Exception as error:
+        print(f"Peringatan: post Firestore gagal diambil ({error}). Build lanjut tanpa post Firestore.")
+        return []
+
+    posts = []
+    for document in documents:
+        data = {key: firestore_value(value) for key, value in document.get("fields", {}).items()}
+        if data.get("published") is not True:
+            continue
+        slug = data.get("slug") or document["name"].rsplit("/", 1)[-1]
+        if not SLUG_PATTERN.fullmatch(slug):
+            print(f"Peringatan: slug Firestore tidak valid, dilewati: {slug}")
+            continue
+        try:
+            published_date = dt.date.fromisoformat(str(data.get("date", "")))
+        except ValueError:
+            print(f"Peringatan: tanggal Firestore tidak valid pada {slug}, dilewati.")
+            continue
+        body = str(data.get("body", "")).strip()
+        if not body:
+            continue
+        posts.append({
+            "slug": slug,
+            "title": str(data.get("title", "")).strip() or slug,
+            "date": published_date,
+            "category": str(data.get("category", "")).strip() or "Catatan",
+            "excerpt": str(data.get("excerpt", "")).strip(),
+            "published": True,
+            "body": body,
+            "html": True,
+        })
+    return posts
 
 def build():
     if not POSTS_DIR.is_dir():
         raise FileNotFoundError(f"Folder artikel tidak ditemukan: {POSTS_DIR}")
     posts = [parse_front_matter(path) for path in sorted(POSTS_DIR.glob("*.md"))]
     posts = sorted((post for post in posts if post["published"]), key=lambda item: item["date"], reverse=True)
+
+    
+    firestore_posts = fetch_firestore_posts()
+    known_slugs = {post["slug"] for post in posts}
+    posts.extend(post for post in firestore_posts if post["slug"] not in known_slugs)
+    posts.sort(key=lambda item: item["date"], reverse=True)
+
 
     if OUTPUT.exists():
         shutil.rmtree(OUTPUT)
