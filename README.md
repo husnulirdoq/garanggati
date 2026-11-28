@@ -41,6 +41,19 @@ Artikel terbit dalam `content/posts/` ditampilkan bersama artikel terbit dari Fi
 
 Karena GitHub Pages tidak menjalankan server, isi Firestore dimuat oleh browser. Artikel di `content/posts/` dibuat sebagai halaman statis dengan URL kanonis per artikel, metadata, data terstruktur, dan entri sitemap. Artikel yang hanya ada di Firestore tetap dirender di browser dan belum otomatis masuk sitemap sampai tersedia di `content/posts/`. Feed RSS belum tersedia. Jangan simpan artikel rahasia di Firestore; pengunjung dapat membaca semua dokumen yang berstatus terbit.
 
+## Newsfeed
+
+Halaman utama memiliki bagian headline untuk Ojol, Bitcoin, Keuangan, dan Teknologi. Bagian Bitcoin, Keuangan, dan Teknologi mengambil feed RSS publik Cointelegraph (`/rss/tag/bitcoin`, `/rss/tag/business`, `/rss/tag/technology`) melalui proxy CORS stateless di `workers/cointelegraph-rss-proxy/` tanpa database atau cache tambahan, sehingga feed dapat dimuat ulang langsung dari browser.
+
+### Setup Cloudflare Worker untuk RSS CORS (gratis)
+
+1. Masuk ke [Cloudflare Dashboard](https://dash.cloudflare.com/) → **Workers & Pages** → **Create** → **Create Worker** (atau deploy dari `workers/cointelegraph-rss-proxy/` menggunakan `npx wrangler deploy`).
+2. Salin isi `workers/cointelegraph-rss-proxy/worker.js` ke editor Worker, lalu tekan **Deploy**.
+3. Salin URL Worker (contoh: `https://garanggati-rss-proxy.<subdomain>.workers.dev`) dan ganti `REPLACE_WITH_CLOUDFLARE_WORKER_URL` di `rss-config.js`.
+4. Commit dan push perubahan `rss-config.js` ke `main` agar GitHub Actions membangun ulang situs.
+
+Worker hanya meneruskan daftar URL RSS Cointelegraph yang diizinkan (`?feed=bitcoin|business|technology|...`) dan membatasi header `Access-Control-Allow-Origin` ke `https://garanggati.web.id`, `https://www.garanggati.web.id`, serta `localhost` untuk pengujian lokal. Bagian Ojol belum terhubung ke sumber berita karena Cointelegraph tidak menyediakan topik transportasi online lokal.
+
 ## Donasi Web3
 
 Halaman utama menampilkan pilot donasi **USDC sungguhan di Base Mainnet** (`chainId 8453`). Wallet browser EVM, seperti MetaMask, harus memiliki USDC untuk donasi dan ETH di Base untuk gas. Penerima adalah alamat wallet yang diberikan pemilik situs; transaksi harus diperiksa dengan teliti di wallet sebelum disetujui dan tidak dapat dibatalkan setelah dikonfirmasi.

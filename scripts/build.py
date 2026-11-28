@@ -206,7 +206,7 @@ def shell(title, description, body, canonical, extra_head="", og_type="website")
     <link rel="canonical" href="{escape(canonical)}">
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="/styles.css?v=7">
+    <link rel="stylesheet" href="/styles.css?v=9">
     <title>{escape(title)}</title>
     <script async src="https://www.googletagmanager.com/gtag/js?id={GA4_MEASUREMENT_ID}"></script>
     <script>
@@ -227,10 +227,10 @@ def shell(title, description, body, canonical, extra_head="", og_type="website")
         <span></span><span></span><span></span>
       </button>
       <nav class="site-nav" id="main-navigation" aria-label="Navigasi utama">
-        <a href="/#tulisan">Tulisan</a>
-        <a href="/#buku-tamu">Buku tamu</a>
-        <a href="/shop/">Shop</a>
-        <a href="/#topik">Topik</a>
+        <a href="/#news-ojol">Ojol</a>
+        <a href="/#news-bitcoin">Bitcoin</a>
+        <a href="/#news-keuangan">Keuangan</a>
+        <a href="/#news-teknologi">Teknologi</a>
         <a class="admin-login-link" href="/admin/">Login admin</a>
       </nav>
     </header>
@@ -244,7 +244,7 @@ def shell(title, description, body, canonical, extra_head="", og_type="website")
       </div>
       <a href="/admin/">Login admin <span aria-hidden="true">↗</span></a>
     </footer>
-    <script type="module" src="/blog.js?v=11"></script>
+    <script type="module" src="/blog.js?v=13"></script>
   </body>
 </html>
 """
@@ -256,16 +256,55 @@ def build_home(posts):
     body = f"""
     <main>
       <section class="hero">
-        <p class="eyebrow">CATATAN TENTANG HAL-HAL YANG MENARIK</p>
-        <h1>Gagasan layak<br> diberi <span>ruang.</span></h1>
-        <p class="hero-copy">Tulisan tentang filsafat, bahasa, teknologi, dan cara kita belajar—dikumpulkan sambil terus berpikir.</p>
+        <p class="eyebrow">GARANGGATI · DAILY NEWS BRIEFING</p>
+        <h1>Berita<br> <span>terpilih.</span></h1>
+        <p class="hero-copy">Pantau perkembangan terbaru seputar ojol, Bitcoin, keuangan, dan teknologi dalam satu tempat.</p>
         <div class="hero-actions">
-          <a class="hero-link" href="#tulisan">Baca tulisan <span aria-hidden="true">↓</span></a>
+          <a class="hero-link" href="#news-ojol">Jelajahi topik <span aria-hidden="true">↓</span></a>
           <a class="hero-admin-link" href="{WELLBEING_APK_URL}" target="_blank" rel="noopener noreferrer">Unduh Wellbeing Tracker <span aria-hidden="true">↗</span></a>
           <a class="hero-admin-link" href="/admin/">Login admin <span aria-hidden="true">↗</span></a>
         </div>
         <span class="hero-decoration" aria-hidden="true">✳</span>
       </section>
+      <div class="news-feed" id="news-feed">
+        <div class="news-toolbar">
+          <p class="news-last-updated" id="news-last-updated" role="status" aria-live="polite">Cointelegraph RSS · siap dimuat</p>
+          <button class="news-refresh-button" id="news-refresh" type="button">Muat ulang feed</button>
+        </div>
+        <section class="news-section" id="news-ojol" data-news-category="ojol" aria-labelledby="news-ojol-heading">
+          <div class="news-heading">
+            <div><p class="eyebrow">OJOL & CASHFLOW</p><h2 id="news-ojol-heading">Ojol<span class="brand-period">.</span></h2></div>
+            <p>Berita transportasi online, mitra, tarif, dan pendapatan pengemudi.</p>
+          </div>
+          <p class="news-status" id="news-status-ojol" role="status" aria-live="polite">Sumber berita ojol belum tersedia dari feed RSS Cointelegraph.</p>
+          <div class="news-grid" id="news-grid-ojol"></div>
+        </section>
+        <section class="news-section" id="news-bitcoin" data-news-category="bitcoin" aria-labelledby="news-bitcoin-heading">
+          <div class="news-heading">
+            <div><p class="eyebrow">BITCOIN & KRIPTO · COINTELEGRAPH</p><h2 id="news-bitcoin-heading">Bitcoin<span class="brand-period">.</span></h2></div>
+            <p>Bitcoin, ETF, pasar kripto, dan sentimen makro.</p>
+          </div>
+          <p class="news-status" id="news-status-bitcoin" role="status" aria-live="polite">Memuat feed RSS Cointelegraph...</p>
+          <div class="news-grid" id="news-grid-bitcoin"></div>
+        </section>
+        <section class="news-section" id="news-keuangan" data-news-category="keuangan" aria-labelledby="news-keuangan-heading">
+          <div class="news-heading">
+            <div><p class="eyebrow">KEUANGAN & BISNIS · COINTELEGRAPH</p><h2 id="news-keuangan-heading">Keuangan<span class="brand-period">.</span></h2></div>
+            <p>Utang, cashflow, inflasi, suku bunga, bisnis, dan ekonomi.</p>
+          </div>
+          <p class="news-status" id="news-status-keuangan" role="status" aria-live="polite">Memuat feed RSS Cointelegraph...</p>
+          <div class="news-grid" id="news-grid-keuangan"></div>
+        </section>
+        <section class="news-section" id="news-teknologi" data-news-category="teknologi" aria-labelledby="news-teknologi-heading">
+          <div class="news-heading">
+            <div><p class="eyebrow">AI & TEKNOLOGI · COINTELEGRAPH</p><h2 id="news-teknologi-heading">Teknologi<span class="brand-period">.</span></h2></div>
+            <p>AI, LLM, teknologi konsumen, dan perkembangan digital.</p>
+          </div>
+          <p class="news-status" id="news-status-teknologi" role="status" aria-live="polite">Memuat feed RSS Cointelegraph...</p>
+          <div class="news-grid" id="news-grid-teknologi"></div>
+        </section>
+        <p class="news-disclaimer">Headline dan tautan bersumber dari feed RSS publik Cointelegraph melalui proxy CORS stateless. Hak cipta dan isi artikel sepenuhnya milik Cointelegraph; informasi ini bukan saran investasi atau keuangan.</p>
+      </div>
       <section class="btc-section" id="btc-live" aria-labelledby="btc-heading">
         <div class="btc-heading">
           <div>

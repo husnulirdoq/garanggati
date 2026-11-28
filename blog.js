@@ -12,6 +12,7 @@ import {
   where,
 } from "firebase/firestore";
 import { db, firebaseConfigured } from "./firebase-client.js";
+import { rssProxyConfigured, rssProxyUrl } from "./rss-config.js";
 
 const menuToggle = document.querySelector(".menu-toggle");
 const mainNavigation = document.querySelector("#main-navigation");
@@ -215,6 +216,215 @@ if (btcStatus) {
     if (!btcStopped) return;
     btcStopped = false;
     startBtcPolling();
+  });
+}
+
+const newsFeed = document.querySelector("#news-feed");
+const newsRefreshButton = document.querySelector("#news-refresh");
+const newsLastUpdated = document.querySelector("#news-last-updated");
+const newsCategoryFeeds = [
+  { category: "bitcoin", feed: "bitcoin" },
+  { category: "keuangan", feed: "business" },
+  { category: "teknologi", feed: "technology" },
+];
+const newsItemsLimit = 6;
+const newsRefreshIntervalMs = 5 * 60 * 1000;
+let newsPollingTimer;
+let newsRefreshInProgress = false;
+let newsStopped = false;
+
+function setNewsStatus(category, message, isError = false) {
+  const status = document.querySelector(`#news-status-${category}`);
+  if (!status) return;
+  status.textContent = message;
+  status.classList.toggle("error", isError);
+  status.hidden = !message;
+}
+
+function safeExternalUrl(rawUrl) {
+  try {
+    const parsed = new URL(rawUrl);
+    return parsed.protocol === "https:" || parsed.protocol === "http:" ? parsed.toString() : "";
+  } catch {
+    return "";
+  }
+}
+
+function formatNewsDate(rawDate) {
+  const timestamp = Date.parse(rawDate);
+  if (!Number.isFinite(timestamp)) return "";
+  return `${new Intl.DateTimeFormat("id-ID", {
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Asia/Jakarta",
+  }).format(new Date(timestamp))} WIB`;
+}
+
+function parseCointelegraphRss(xmlText) {
+  const documentXml = new DOMParser().parseFromString(xmlText, "application/xml");
+  if (documentXml.querySelector("parsererror")) {
+    throw new Error("respons XML RSS tidak valid");
+  }
+  return [...documentXml.querySelectorAll("channel > item")]
+    .map((item) => {
+      const title = item.querySelector("title")?.textContent?.trim() ?? "";
+      const link = safeExternalUrl(item.querySelector("link")?.textContent?.trim() ?? "");
+      const pubDate = item.querySelector("pubDate")?.textContent?.trim() ?? "";
+      const author = item.getElementsByTagName("dc:creator")[0]?.textContent?.trim() || "Cointelegraph";
+      return { title, link, pubDate, author };
+    })
+    .filter((item) => item.title && item.link)
+    .slice(0, newsItemsLimit);
+}
+
+function makeNewsCard(item) {
+  const card = document.createElement("article");
+  card.className = "news-card";
+
+  const meta = document.createElement("div");
+  meta.className = "news-meta";
+  const source = document.createElement("span");
+  source.className = "news-source";
+  source.textContent = item.author;
+  const time = document.createElement("time");
+  time.className = "news-time";
+  const parsedDate = Date.parse(item.pubDate);
+  if (Number.isFinite(parsedDate)) {
+    time.dateTime = new Date(parsedDate).toISOString();
+  }
+  time.textContent = formatNewsDate(item.pubDate);
+  meta.append(source, time);
+
+  const heading = document.createElement("h3");
+  const link = document.createElement("a");
+  link.href = item.link;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.textContent = item.title;
+  heading.append(link);
+
+  const readLink = document.createElement("a");
+  readLink.className = "read-link";
+  readLink.href = item.link;
+  readLink.target = "_blank";
+  readLink.rel = "noopener noreferrer";
+  readLink.append(document.createTextNode("Baca di Cointelegraph "));
+  const arrow = document.createElement("span");
+  arrow.setAttribute("aria-hidden", "true");
+  arrow.textContent = "↗";
+  readLink.append(arrow);
+
+  card.append(meta, heading, readLink);
+  return card;
+}
+
+async function fetchCategoryRss(category, feed) {
+  const grid = document.querySelector(`#news-grid-${category}`);
+  if (!grid) return;
+
+  const requestUrl = new URL(rssProxyUrl);
+  requestUrl.searchParams.set("feed", feed);
+  requestUrl.searchParams.set("_t", String(Date.now()));
+
+  const response = await fetch(requestUrl.toString(), { cache: "no-store" });
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+  const xmlText = await response.text();
+  const items = parseCointelegraphRss(xmlText);
+  if (!items.length) {
+    grid.replaceChildren();
+    setNewsStatus(category, "Belum ada item berita dari feed ini.");
+    return;
+  }
+
+  grid.replaceChildren(...items.map(makeNewsCard));
+  setNewsStatus(category, "");
+}
+
+async function refreshNewsFeeds() {
+  if (!newsFeed || newsRefreshInProgress) return;
+  if (!rssProxyConfigured) {
+    for (const { category } of newsCategoryFeeds) {
+      setNewsStatus(category, "Proxy RSS Cloudflare Worker belum dikonfigurasi di rss-config.js.");
+    }
+    if (newsLastUpdated) {
+      newsLastUpdated.textContent = "Cointelegraph RSS · Worker belum dikonfigurasi";
+    }
+    return;
+  }
+
+  newsRefreshInProgress = true;
+  if (newsRefreshButton) {
+    newsRefreshButton.disabled = true;
+    newsRefreshButton.textContent = "Memuat ulang...";
+  }
+  for (const { category } of newsCategoryFeeds) {
+    const grid = document.querySelector(`#news-grid-${category}`);
+    if (!grid?.children.length) {
+      setNewsStatus(category, "Memuat berita dari Cointelegraph...");
+    }
+  }
+
+  const results = await Promise.allSettled(
+    newsCategoryFeeds.map(({ category, feed }) => fetchCategoryRss(category, feed)),
+  );
+
+  let successCount = 0;
+  results.forEach((result, index) => {
+    const { category } = newsCategoryFeeds[index];
+    if (result.status === "fulfilled") {
+      successCount += 1;
+    } else {
+      console.error(`Feed Cointelegraph (${category}) gagal dimuat.`, result.reason);
+      setNewsStatus(category, `Feed Cointelegraph gagal dimuat: ${result.reason?.message || "kesalahan jaringan"}`, true);
+    }
+  });
+
+  if (newsLastUpdated) {
+    const timeText = new Intl.DateTimeFormat("id-ID", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      timeZone: "Asia/Jakarta",
+    }).format(new Date());
+    newsLastUpdated.textContent = successCount
+      ? `Cointelegraph RSS · diperbarui ${timeText} WIB`
+      : "Cointelegraph RSS · gagal memuat pembaruan";
+  }
+
+  newsRefreshInProgress = false;
+  if (newsRefreshButton) {
+    newsRefreshButton.disabled = false;
+    newsRefreshButton.textContent = "Muat ulang feed";
+  }
+}
+
+function startNewsPolling() {
+  if (!newsFeed || newsPollingTimer || newsStopped) return;
+  refreshNewsFeeds();
+  if (rssProxyConfigured) {
+    newsPollingTimer = window.setInterval(refreshNewsFeeds, newsRefreshIntervalMs);
+  }
+}
+
+if (newsFeed) {
+  newsRefreshButton?.addEventListener("click", () => {
+    refreshNewsFeeds();
+  });
+  startNewsPolling();
+
+  window.addEventListener("pagehide", () => {
+    newsStopped = true;
+    window.clearInterval(newsPollingTimer);
+    newsPollingTimer = null;
+  });
+  window.addEventListener("pageshow", () => {
+    if (!newsStopped) return;
+    newsStopped = false;
+    startNewsPolling();
   });
 }
 

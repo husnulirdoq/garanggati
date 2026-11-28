@@ -46,6 +46,32 @@ button { color: inherit; }
 .hero-admin-link span { color: #96978c; font-size: 10px; }
 .hero-decoration { position: absolute; top: 67px; right: max(11vw, calc((100vw - 1080px) / 2)); color: rgb(182 163 111 / 20%); font-size: 196px; line-height: 1; }
 
+.news-section { max-width: 1080px; margin: 0 auto; padding: 46px 20px 24px; scroll-margin-top: 85px; }
+.news-heading { display: flex; align-items: end; justify-content: space-between; gap: 20px; }
+.news-heading .eyebrow { margin-bottom: 9px; }
+.news-heading h2 { margin: 0; font: 600 27px "Segoe UI", sans-serif; letter-spacing: -1px; }
+.news-heading > p { max-width: 320px; margin: 0 0 3px; color: #85867f; font-size: 11px; line-height: 1.7; }
+.news-feed { padding-top: 6px; }
+.news-toolbar { display: flex; max-width: 1080px; margin: 18px auto 0; padding: 0 20px; align-items: center; justify-content: space-between; gap: 12px; }
+.news-last-updated { margin: 0; color: #85867f; font-size: 10px; }
+.news-refresh-button { display: inline-flex; min-height: 32px; align-items: center; padding: 0 12px; border: 1px solid #d6dfd0; border-radius: 5px; background: var(--green-pale); color: var(--green-dark); cursor: pointer; font-size: 10px; font-weight: 600; transition: background .16s, border-color .16s; }
+.news-refresh-button:hover { border-color: #b7c5ae; background: #e4ebdf; }
+.news-refresh-button:disabled { cursor: wait; opacity: .65; }
+.news-section { padding-top: 38px; padding-bottom: 22px; }
+.news-section + .news-section { border-top: 1px solid var(--line); }
+.news-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; margin-top: 16px; }
+.news-card { display: flex; min-height: 160px; flex-direction: column; padding: 17px; border: 1px solid #ebe9e2; border-radius: 8px; background: var(--surface); transition: transform .18s, box-shadow .18s, border-color .18s; }
+.news-card:hover { transform: translateY(-2px); border-color: #d8ddcf; box-shadow: 0 12px 30px rgb(46 51 39 / 7%); }
+.news-card h3 { margin: 13px 0 10px; font: 600 14px/1.5 "Segoe UI", sans-serif; }
+.news-card h3 a { text-decoration: none; }
+.news-card h3 a:hover { color: var(--green-dark); }
+.news-meta { display: flex; justify-content: space-between; gap: 10px; color: #96978c; font-size: 9px; }
+.news-source { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.news-time { flex: 0 0 auto; }
+.news-status { margin: 13px 0 0; color: #85867f; font-size: 10px; }
+.news-status.error { color: #9b5d50; }
+.news-disclaimer { max-width: 1040px; margin: 12px auto 28px; padding: 0 20px; color: #96978c; font-size: 9px; line-height: 1.6; }
+.news-feed[hidden], .news-card[hidden], .news-status[hidden] { display: none; }
 .btc-section { max-width: 1080px; margin: 0 auto; padding: 46px 20px 30px; scroll-margin-top: 85px; }
 .btc-heading { display: flex; align-items: end; justify-content: space-between; gap: 20px; }
 .btc-heading .eyebrow { margin-bottom: 9px; }
@@ -322,6 +348,15 @@ kbd { padding: 2px 5px; border: 1px solid #e6e4dc; border-radius: 3px; color: #9
   .hero-decoration { top: 138px; right: 3px; font-size: 112px; }
   .hero-actions { gap: 8px; }
   .hero-link, .hero-admin-link { min-height: 35px; padding: 0 10px; font-size: 9px; }
+  .news-section { padding: 34px 19px 18px; }
+  .news-heading { align-items: stretch; flex-direction: column; gap: 7px; }
+  .news-heading h2 { font-size: 24px; }
+  .news-heading > p { max-width: none; }
+  .news-toolbar { flex-wrap: wrap; padding: 0 19px; }
+  .news-grid { grid-template-columns: 1fr; gap: 9px; margin-top: 13px; }
+  .news-card { min-height: 130px; padding: 15px; }
+  .news-card h3 { font-size: 14px; }
+  .news-disclaimer { padding: 0 19px; }
   .btc-section { padding: 34px 19px 20px; }
   .btc-heading { align-items: stretch; flex-direction: column; gap: 7px; }
   .btc-heading h2 { font-size: 24px; }
