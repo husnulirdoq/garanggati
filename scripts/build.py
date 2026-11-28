@@ -206,7 +206,7 @@ def shell(title, description, body, canonical, extra_head="", og_type="website")
     <link rel="canonical" href="{escape(canonical)}">
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="/styles.css?v=9">
+    <link rel="stylesheet" href="/styles.css?v=10">
     <title>{escape(title)}</title>
     <script async src="https://www.googletagmanager.com/gtag/js?id={GA4_MEASUREMENT_ID}"></script>
     <script>
@@ -227,9 +227,11 @@ def shell(title, description, body, canonical, extra_head="", og_type="website")
         <span></span><span></span><span></span>
       </button>
       <nav class="site-nav" id="main-navigation" aria-label="Navigasi utama">
-        <a href="/#news-bitcoin">Bitcoin</a>
-        <a href="/#news-keuangan">Keuangan</a>
-        <a href="/#news-teknologi">Teknologi</a>
+        <a href="/#tulisan">Tulisan</a>
+        <a href="/#news-feed">Berita</a>
+        <a href="/shop/">Shop</a>
+        <a href="/#buku-tamu">Buku tamu</a>
+        <a href="/#topik">Topik</a>
         <a class="admin-login-link" href="/admin/">Login admin</a>
       </nav>
     </header>
@@ -255,15 +257,39 @@ def build_home(posts):
     body = f"""
     <main>
       <section class="hero">
-        <p class="eyebrow">GARANGGATI · DAILY NEWS BRIEFING</p>
-        <h1>Berita<br> <span>terpilih.</span></h1>
-        <p class="hero-copy">Pantau perkembangan terbaru seputar Bitcoin, keuangan, dan teknologi dalam satu tempat.</p>
+        <p class="eyebrow">CATATAN TENTANG HAL-HAL YANG MENARIK</p>
+        <h1>Gagasan layak<br> diberi <span>ruang.</span></h1>
+        <p class="hero-copy">Tulisan tentang filsafat, bahasa, teknologi, dan cara kita belajar—dikumpulkan sambil terus berpikir.</p>
         <div class="hero-actions">
-          <a class="hero-link" href="#news-bitcoin">Jelajahi topik <span aria-hidden="true">↓</span></a>
+          <a class="hero-link" href="#tulisan">Baca tulisan <span aria-hidden="true">↓</span></a>
+          <a class="hero-admin-link" href="#news-feed">Berita terpilih <span aria-hidden="true">↓</span></a>
           <a class="hero-admin-link" href="{WELLBEING_APK_URL}" target="_blank" rel="noopener noreferrer">Unduh Wellbeing Tracker <span aria-hidden="true">↗</span></a>
           <a class="hero-admin-link" href="/admin/">Login admin <span aria-hidden="true">↗</span></a>
         </div>
         <span class="hero-decoration" aria-hidden="true">✳</span>
+      </section>
+      <section class="posts-section" id="tulisan">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">PERPUSTAKAAN IDE</p>
+            <h2>Tulisan terbaru<span class="brand-period">.</span></h2>
+          </div>
+          <label class="search-box">
+            <span class="search-icon" aria-hidden="true">⌕</span>
+            <input id="search-input" type="search" placeholder="Cari tulisan..." autocomplete="off">
+            <kbd>/</kbd>
+          </label>
+        </div>
+        <nav class="topic-filters" id="topik" aria-label="Filter topik">
+          <button class="filter-chip active" type="button" data-category="">Semua tulisan</button>
+          {categories}
+        </nav>
+        <p class="site-status" id="site-status" role="status" aria-live="polite" hidden></p>
+        <p class="result-count" id="result-count" aria-live="polite"></p>
+        <div class="posts-grid" id="posts-grid">
+          {cards}
+        </div>
+        <p class="no-results" id="no-results" hidden>Tidak ada tulisan yang cocok. Coba kata kunci atau topik lain.</p>
       </section>
       <div class="news-feed" id="news-feed">
         <div class="news-toolbar">
@@ -334,29 +360,6 @@ def build_home(posts):
           <p class="btc-status" id="btc-status" role="status" aria-live="polite">Memuat harga dari CoinPaprika...</p>
           <p class="btc-disclaimer">Harga pasar BTC/USD untuk informasi saja, bukan saran investasi.</p>
         </div>
-      </section>
-      <section class="posts-section" id="tulisan">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">PERPUSTAKAAN IDE</p>
-            <h2>Tulisan terbaru<span class="brand-period">.</span></h2>
-          </div>
-          <label class="search-box">
-            <span class="search-icon" aria-hidden="true">⌕</span>
-            <input id="search-input" type="search" placeholder="Cari tulisan..." autocomplete="off">
-            <kbd>/</kbd>
-          </label>
-        </div>
-        <nav class="topic-filters" id="topik" aria-label="Filter topik">
-          <button class="filter-chip active" type="button" data-category="">Semua tulisan</button>
-          {categories}
-        </nav>
-        <p class="site-status" id="site-status" role="status" aria-live="polite" hidden></p>
-        <p class="result-count" id="result-count" aria-live="polite"></p>
-        <div class="posts-grid" id="posts-grid">
-          {cards}
-        </div>
-        <p class="no-results" id="no-results" hidden>Tidak ada tulisan yang cocok. Coba kata kunci atau topik lain.</p>
       </section>
       <section class="web3-section" id="donasi-web3" aria-labelledby="web3-heading">
         <div class="web3-heading">
