@@ -48,11 +48,13 @@ class BlogBuildTests(unittest.TestCase):
             self.assertNotIn("Pelunasan utang", home)
             self.assertNotIn("06:30–10:00", home)
             self.assertIn("Berita", home)
-            self.assertIn('href="/#news-ojol">Ojol</a>', home)
+            self.assertNotIn("news-ojol", home)
+            self.assertNotIn("OJOL", home)
+            self.assertNotIn("cashflow", home.lower())
             self.assertIn('href="/#news-bitcoin">Bitcoin</a>', home)
             self.assertIn('href="/#news-keuangan">Keuangan</a>', home)
             self.assertIn('href="/#news-teknologi">Teknologi</a>', home)
-            for category in ("ojol", "bitcoin", "keuangan", "teknologi"):
+            for category in ("bitcoin", "keuangan", "teknologi"):
                 self.assertIn(f'id="news-grid-{category}"', home)
                 self.assertIn(f'id="news-status-{category}"', home)
             self.assertIn('id="news-refresh"', home)

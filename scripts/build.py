@@ -227,7 +227,6 @@ def shell(title, description, body, canonical, extra_head="", og_type="website")
         <span></span><span></span><span></span>
       </button>
       <nav class="site-nav" id="main-navigation" aria-label="Navigasi utama">
-        <a href="/#news-ojol">Ojol</a>
         <a href="/#news-bitcoin">Bitcoin</a>
         <a href="/#news-keuangan">Keuangan</a>
         <a href="/#news-teknologi">Teknologi</a>
@@ -258,9 +257,9 @@ def build_home(posts):
       <section class="hero">
         <p class="eyebrow">GARANGGATI · DAILY NEWS BRIEFING</p>
         <h1>Berita<br> <span>terpilih.</span></h1>
-        <p class="hero-copy">Pantau perkembangan terbaru seputar ojol, Bitcoin, keuangan, dan teknologi dalam satu tempat.</p>
+        <p class="hero-copy">Pantau perkembangan terbaru seputar Bitcoin, keuangan, dan teknologi dalam satu tempat.</p>
         <div class="hero-actions">
-          <a class="hero-link" href="#news-ojol">Jelajahi topik <span aria-hidden="true">↓</span></a>
+          <a class="hero-link" href="#news-bitcoin">Jelajahi topik <span aria-hidden="true">↓</span></a>
           <a class="hero-admin-link" href="{WELLBEING_APK_URL}" target="_blank" rel="noopener noreferrer">Unduh Wellbeing Tracker <span aria-hidden="true">↗</span></a>
           <a class="hero-admin-link" href="/admin/">Login admin <span aria-hidden="true">↗</span></a>
         </div>
@@ -271,14 +270,6 @@ def build_home(posts):
           <p class="news-last-updated" id="news-last-updated" role="status" aria-live="polite">Cointelegraph RSS · siap dimuat</p>
           <button class="news-refresh-button" id="news-refresh" type="button">Muat ulang feed</button>
         </div>
-        <section class="news-section" id="news-ojol" data-news-category="ojol" aria-labelledby="news-ojol-heading">
-          <div class="news-heading">
-            <div><p class="eyebrow">OJOL & CASHFLOW</p><h2 id="news-ojol-heading">Ojol<span class="brand-period">.</span></h2></div>
-            <p>Berita transportasi online, mitra, tarif, dan pendapatan pengemudi.</p>
-          </div>
-          <p class="news-status" id="news-status-ojol" role="status" aria-live="polite">Sumber berita ojol belum tersedia dari feed RSS Cointelegraph.</p>
-          <div class="news-grid" id="news-grid-ojol"></div>
-        </section>
         <section class="news-section" id="news-bitcoin" data-news-category="bitcoin" aria-labelledby="news-bitcoin-heading">
           <div class="news-heading">
             <div><p class="eyebrow">BITCOIN & KRIPTO · COINTELEGRAPH</p><h2 id="news-bitcoin-heading">Bitcoin<span class="brand-period">.</span></h2></div>
@@ -290,7 +281,7 @@ def build_home(posts):
         <section class="news-section" id="news-keuangan" data-news-category="keuangan" aria-labelledby="news-keuangan-heading">
           <div class="news-heading">
             <div><p class="eyebrow">KEUANGAN & BISNIS · COINTELEGRAPH</p><h2 id="news-keuangan-heading">Keuangan<span class="brand-period">.</span></h2></div>
-            <p>Utang, cashflow, inflasi, suku bunga, bisnis, dan ekonomi.</p>
+            <p>Inflasi, suku bunga, bisnis, pasar, dan ekonomi global.</p>
           </div>
           <p class="news-status" id="news-status-keuangan" role="status" aria-live="polite">Memuat feed RSS Cointelegraph...</p>
           <div class="news-grid" id="news-grid-keuangan"></div>

@@ -43,7 +43,7 @@ Karena GitHub Pages tidak menjalankan server, isi Firestore dimuat oleh browser.
 
 ## Newsfeed
 
-Halaman utama memiliki bagian headline untuk Ojol, Bitcoin, Keuangan, dan Teknologi. Bagian Bitcoin, Keuangan, dan Teknologi mengambil feed RSS publik Cointelegraph (`/rss/tag/bitcoin`, `/rss/tag/business`, `/rss/tag/technology`) melalui proxy CORS stateless di `workers/cointelegraph-rss-proxy/` tanpa database atau cache tambahan, sehingga feed dapat dimuat ulang langsung dari browser.
+Halaman utama memiliki bagian headline untuk Bitcoin, Keuangan, dan Teknologi yang mengambil feed RSS publik Cointelegraph (`/rss/tag/bitcoin`, `/rss/tag/business`, `/rss/tag/technology`) melalui proxy CORS stateless di `workers/cointelegraph-rss-proxy/` tanpa database atau cache tambahan, sehingga feed dapat dimuat ulang langsung dari browser.
 
 ### Setup Cloudflare Worker untuk RSS CORS (gratis)
 
@@ -52,7 +52,7 @@ Halaman utama memiliki bagian headline untuk Ojol, Bitcoin, Keuangan, dan Teknol
 3. Salin URL Worker (contoh: `https://garanggati-rss-proxy.<subdomain>.workers.dev`) dan ganti `REPLACE_WITH_CLOUDFLARE_WORKER_URL` di `rss-config.js`.
 4. Commit dan push perubahan `rss-config.js` ke `main` agar GitHub Actions membangun ulang situs.
 
-Worker hanya meneruskan daftar URL RSS Cointelegraph yang diizinkan (`?feed=bitcoin|business|technology|...`) dan membatasi header `Access-Control-Allow-Origin` ke `https://garanggati.web.id`, `https://www.garanggati.web.id`, serta `localhost` untuk pengujian lokal. Bagian Ojol belum terhubung ke sumber berita karena Cointelegraph tidak menyediakan topik transportasi online lokal.
+Worker hanya meneruskan daftar URL RSS Cointelegraph yang diizinkan (`?feed=bitcoin|business|technology|...`) dan membatasi header `Access-Control-Allow-Origin` ke `https://garanggati.web.id`, `https://www.garanggati.web.id`, serta `localhost` untuk pengujian lokal.
 
 ## Donasi Web3
 
