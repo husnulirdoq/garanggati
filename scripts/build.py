@@ -579,6 +579,7 @@ def build_not_found():
       <p class="eyebrow">HALAMAN TIDAK DITEMUKAN</p>
       <h1>Ruang ini kosong<span class="brand-period">.</span></h1>
       <p>Mungkin tulisannya pindah, atau alamatnya kurang tepat.</p>
+      <p class="site-status" id="site-status" role="status" aria-live="polite" hidden></p>
       <a href="/">Kembali ke halaman utama →</a>
     </main>
     """
