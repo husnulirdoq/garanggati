@@ -52,7 +52,11 @@ const btcAxisHigh = document.querySelector("#btc-axis-high");
 const btcAxisMid = document.querySelector("#btc-axis-mid");
 const btcAxisLow = document.querySelector("#btc-axis-low");
 const btcAxisStart = document.querySelector("#btc-axis-start");
-const btcLivePrices = [];
+const btcHistoryStorageKey = "garanggati-btc-prices-v1";
+const btcHistoryWindowSeconds = 24 * 60 * 60;
+const btcHistoryLimit = 289;
+let btcHistoryStorageError = false;
+const btcLivePrices = loadBtcPrices();
 const btcPriceFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
@@ -67,6 +71,38 @@ function setBtcStatus(message, isError = false) {
   if (!btcStatus) return;
   btcStatus.textContent = message;
   btcStatus.classList.toggle("error", isError);
+}
+
+function loadBtcPrices() {
+  try {
+    const storedPrices = JSON.parse(localStorage.getItem(btcHistoryStorageKey) ?? "[]");
+    if (!Array.isArray(storedPrices)) throw new Error("riwayat grafik bukan daftar harga");
+    const cutoff = Date.now() / 1000 - btcHistoryWindowSeconds;
+    return storedPrices
+      .filter(
+        (point) =>
+          Number.isFinite(point?.time) &&
+          Number.isFinite(point?.price) &&
+          point.price > 0 &&
+          point.time >= cutoff,
+      )
+      .sort((left, right) => left.time - right.time)
+      .slice(-btcHistoryLimit);
+  } catch (error) {
+    btcHistoryStorageError = true;
+    console.error("Could not load the saved BTC/USD chart history.", error);
+    return [];
+  }
+}
+
+function saveBtcPrices() {
+  try {
+    localStorage.setItem(btcHistoryStorageKey, JSON.stringify(btcLivePrices));
+    btcHistoryStorageError = false;
+  } catch (error) {
+    btcHistoryStorageError = true;
+    console.error("Could not save the BTC/USD chart history in this browser.", error);
+  }
 }
 
 function drawBtcChart() {
@@ -97,27 +133,32 @@ function drawBtcChart() {
     : "--";
   btcChange.classList.toggle("negative", btcDailyChange < 0);
   btcChartDescription.textContent =
-    "Grafik harga agregat BTC/USD CoinPaprika sejak pemantauan dimulai.";
+    "Grafik harga agregat BTC/USD CoinPaprika selama maksimal 24 jam terakhir.";
 }
+
+function updateBtcHistorySummary() {
+  const first = new Date(btcLivePrices[0].time * 1000);
+  btcAxisStart.textContent = `Mulai ${new Intl.DateTimeFormat("id-ID", {
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Asia/Jakarta",
+  }).format(first)}`;
+  btcPrice.textContent = btcPriceFormatter.format(btcLivePrices.at(-1).price);
+  drawBtcChart();
+}
+
+if (btcLivePrices.length) updateBtcHistorySummary();
 
 function addBtcPrice(price, timestamp) {
   if (!Number.isFinite(price) || price <= 0) return;
   const latestPoint = btcLivePrices.at(-1);
   if (latestPoint && timestamp <= latestPoint.time) return;
   btcLivePrices.push({ time: timestamp, price });
-  const cutoff = Date.now() / 1000 - 24 * 60 * 60;
-  while (btcLivePrices.length > 1 && btcLivePrices[0].time < cutoff) btcLivePrices.shift();
-  while (btcLivePrices.length > 289) btcLivePrices.shift();
-  if (btcLivePrices.length) {
-    const first = new Date(btcLivePrices[0].time * 1000);
-    btcAxisStart.textContent = `Mulai ${new Intl.DateTimeFormat("id-ID", {
-      hour: "2-digit",
-      minute: "2-digit",
-      timeZone: "Asia/Jakarta",
-    }).format(first)}`;
-  }
-  btcPrice.textContent = btcPriceFormatter.format(price);
-  drawBtcChart();
+  const cutoff = Date.now() / 1000 - btcHistoryWindowSeconds;
+  while (btcLivePrices.length && btcLivePrices[0].time < cutoff) btcLivePrices.shift();
+  while (btcLivePrices.length > btcHistoryLimit) btcLivePrices.shift();
+  saveBtcPrices();
+  updateBtcHistorySummary();
 }
 
 async function pollBtcTicker() {
@@ -144,7 +185,8 @@ async function pollBtcTicker() {
     }).format(new Date(updatedAt));
     const ageMinutes = Math.max(0, Math.floor((Date.now() - updatedAt) / 60000));
     setBtcStatus(
-      `CoinPaprika · sumber diperbarui ${updatedTime} WIB${ageMinutes ? ` · ${ageMinutes} menit lalu` : ""}`,
+      `CoinPaprika · sumber diperbarui ${updatedTime} WIB${ageMinutes ? ` · ${ageMinutes} menit lalu` : ""}${btcHistoryStorageError ? " · riwayat tidak dapat disimpan di browser ini" : ""}`,
+      btcHistoryStorageError,
     );
   } catch (error) {
     console.error("BTC/USD ticker failed to load from CoinPaprika.", error);

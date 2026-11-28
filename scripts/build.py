@@ -244,7 +244,7 @@ def shell(title, description, body, canonical, extra_head="", og_type="website")
       </div>
       <a href="/admin/">Login admin <span aria-hidden="true">↗</span></a>
     </footer>
-    <script type="module" src="/blog.js?v=10"></script>
+    <script type="module" src="/blog.js?v=11"></script>
   </body>
 </html>
 """
@@ -288,7 +288,7 @@ def build_home(posts):
           <div class="btc-chart-wrap">
             <svg class="btc-chart" viewBox="0 0 760 240" role="img" aria-labelledby="btc-chart-title btc-chart-description" preserveAspectRatio="none">
               <title id="btc-chart-title">Grafik harga Bitcoin terhadap dolar AS</title>
-              <desc id="btc-chart-description">Grafik harga BTC/USD sejak pemantauan dimulai, dari CoinPaprika.</desc>
+              <desc id="btc-chart-description">Grafik harga BTC/USD CoinPaprika selama maksimal 24 jam terakhir.</desc>
               <line class="btc-gridline" x1="0" y1="20" x2="760" y2="20"></line>
               <line class="btc-gridline" x1="0" y1="120" x2="760" y2="120"></line>
               <line class="btc-gridline" x1="0" y1="220" x2="760" y2="220"></line>

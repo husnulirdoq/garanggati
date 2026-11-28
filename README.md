@@ -49,7 +49,7 @@ Integrasi berinteraksi langsung dengan kontrak USDC resmi Base (`0x833589fCD6eDb
 
 ## Grafik BTC live
 
-Halaman utama menampilkan grafik BTC/USD yang mulai menggambar saat halaman dibuka, menggunakan ticker gratis CoinPaprika tanpa API key. Data CoinPaprika adalah harga agregat tertimbang dari pasar yang dipantau; paket gratis diperbarui rata-rata setiap lima menit, bukan tick bursa real-time. API paket gratis memiliki kuota 20.000 request per bulan, sehingga widget meminta data tiap lima menit. Endpoint merespons dari workspace dan mengizinkan CORS, tetapi akses dari Codespaces tidak menjamin endpoint dapat diakses dari semua ISP Indonesia. Fitur ini hanya menampilkan data pasar; tidak melakukan trading dan bukan saran investasi.
+Halaman utama menampilkan grafik BTC/USD dari ticker gratis CoinPaprika tanpa API key. Titik harga disimpan di `localStorage` browser dan dipulihkan saat halaman dibuka kembali, sehingga riwayat grafik tidak hilang saat refresh. Riwayat mencakup maksimal 24 jam dan 289 titik, hanya tersedia di browser/perangkat yang sama, serta dapat terhapus jika data situs dibersihkan. Data CoinPaprika adalah harga agregat tertimbang dari pasar yang dipantau; paket gratis diperbarui rata-rata setiap lima menit, bukan tick bursa real-time. API paket gratis memiliki kuota 20.000 request per bulan, sehingga widget meminta data tiap lima menit. Endpoint merespons dari workspace dan mengizinkan CORS, tetapi akses dari Codespaces tidak menjamin endpoint dapat diakses dari semua ISP Indonesia. Fitur ini hanya menampilkan data pasar; tidak melakukan trading dan bukan saran investasi.
 
 ## Shop
 
