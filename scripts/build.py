@@ -217,7 +217,7 @@ def shell(title, description, body, canonical, extra_head="", og_type="website")
     </script>
     {extra_head}
     <script type="module" src='https://static.cloudflareinsights.com/beacon.min.js'
-        data-cf-beacon='{"token": "fc33dbb08fa64beab83c9a63f9aa6ba0"}'></script>
+                data-cf-beacon='{{"token": "fc33dbb08fa64beab83c9a63f9aa6ba0"}}'></script>
   </head>
   <body>
     <header class="site-header">
